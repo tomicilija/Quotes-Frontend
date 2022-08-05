@@ -2,6 +2,8 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   position: relative;
+  
+  flex-shrink: 0;
   display: flex;
   flex-direction: row;
   align-self: flex-end;
@@ -9,7 +11,6 @@ export const Container = styled.div`
   align-content: flex-end;
   align-items: flex-end;
   padding: 20px 70px;
-  margin-top: 200px;
   width: 100%;
 
   /* Gradient */

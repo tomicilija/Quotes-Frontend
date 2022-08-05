@@ -1,21 +1,50 @@
 /* importing global styles */
-import './App.css';
+import "./App.css";
 
+import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
 import React from "react";
+import NavbarLoggedOut from "./components/navbar/navbar-logged-out/NavbarLoggedOut";
+import NavbarLoggedIn from "./components/navbar/navbar-logged-in/NavbarLoggedIn";
+import NavbarSignup from "./components/navbar/navbar-signup/NavbarSignup";
+import NavbarLogin from "./components/navbar/navbar-login/NavbarLogin";
 import Hero from "./components/landing-page/hero/Hero";
 import CardGrid from "./components/landing-page/card-grid/CardGrid";
-import Navbar from "./components/navbar-logged-out/Navbar";
-import Footer from './components/footer/Footer';
+import Login from "./components/login/Login";
+import SignUp from "./components/sign-up/SignUp";
+import Footer from "./components/footer/Footer";
 
 class App extends React.Component {
   render() {
     return (
-      <div className="app">
-        <Navbar />
-        <Hero />
-        <CardGrid />
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <div>
+                <NavbarLoggedOut /> <Hero /> <CardGrid />
+              </div>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <div>
+                <NavbarSignup /> <SignUp />
+              </div>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <div>
+                <NavbarLogin /> <Login />
+              </div>
+            }
+          />
+        </Routes>
         <Footer />
-      </div>
+      </BrowserRouter>
     );
   }
 }

@@ -6,6 +6,8 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  
+  margin-bottom: 200px;
 
   //  Testing if the background image posinioning is working like this
   /*
