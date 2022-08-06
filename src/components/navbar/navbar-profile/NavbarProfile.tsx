@@ -9,7 +9,7 @@ import {
   DesktopLink,
   BurgerMenu,
   AddMobile,
-} from "./NavbarLoggedIn.style";
+} from "./NavbarProfile.style";
 
 import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
 import { ReactComponent as LogoIcon } from "../../../assets/icons/navbar-logo.svg";
@@ -31,9 +31,14 @@ const Navbar = () => {
         <span className={isOpen ? "xmark" : "burger"}></span>
         <span className={isOpen ? "xmark" : "burger"}></span>
       </BurgerMenu>
-      <Logo className={isOpen ? "hideLogo" : "showLogo"}>
+      <Logo className={isOpen ? "black hideLogo" : "black showLogo"}>
         <Link to="/" style={{ textDecoration: "none" }}>
           <LogoIcon />
+        </Link>
+      </Logo>
+      <Logo className={isOpen ? "white hideLogo" : "white showLogo"}>
+        <Link to="/" style={{ textDecoration: "none" }}>
+          <LogoIconWhite />
         </Link>
       </Logo>
       <AddMobile className={isOpen ? "hideButton" : "showButton"}>

@@ -40,7 +40,7 @@ const Navbar = () => {
             </Home>
           </Link>
           <Link to="/login" style={{ textDecoration: "none" }}>
-            <Button className="login">Login</Button>
+            <Button className="login">Sign up</Button>
           </Link>
         </ButtonWrapper>
       </Menu>

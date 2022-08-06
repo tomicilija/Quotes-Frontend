@@ -38,6 +38,21 @@ export const Logo = styled.div`
   }
 `;
 
+export const AddMobile = styled.div`
+  display: none;
+  @media (max-width: 900px) {
+    width: 50px;
+    display: flex;
+
+    &.showButton {
+      display: flex;
+    }
+    &.hideButton {
+      display: none;
+    }
+  }
+`;
+
 export const Menu = styled.div`
   display: flex;
   justify-content: space-between;
@@ -64,14 +79,17 @@ export const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  position: relative;
   padding: 0px;
-  gap: 48px;
+  gap: 32px;
 
   @media (max-width: 900px) {
     flex-direction: column;
-    gap: 20px;
+    padding-right: 35px;
+    gap: 0px;
     width: 100%;
+    a {
+      width: 100%;
+    }
   }
 
   .signup {
@@ -91,17 +109,14 @@ export const Button = styled.button`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 8px 16px;
-  gap: 10px;
-  width: 120px;
+  width: 40px;
   height: 40px;
 
-  border-radius: 32px;
-  border-width: 2px;
-  border-style: solid;
-  border-color: #e59967;
+  background: #ffffff;
+  border-radius: 60px;
+  border: none;
 
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
 
   font-family: "Raleway";
   font-style: normal;
@@ -111,11 +126,10 @@ export const Button = styled.button`
   text-align: center;
 
   flex: none;
-  flex-grow: 0;
-
-  :hover {
-    border-bottom: 5px solid #e59967;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  
+  div{
+    height: 140%;
   }
 
   @media (max-width: 900px) {
@@ -128,7 +142,7 @@ export const Button = styled.button`
   }
 `;
 
-export const Home = styled.div`
+export const MobileLink = styled.div`
   display: none;
   padding: 0px;
 
@@ -141,10 +155,33 @@ export const Home = styled.div`
     line-height: 28px;
 
     color: #322d38;
+    span {
+      color: #de8667;
+    }
   }
+
   @media (max-width: 900px) {
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+  }
+`;
+
+export const DesktopLink = styled.div`
+  display: flex;
+  padding: 0px;
+  p {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #ffffff;
+    cursor: pointer;
+  }
+  @media (max-width: 900px) {
+    display: none;
   }
 `;
 

@@ -84,6 +84,9 @@ export const ButtonWrapper = styled.div`
     // Text color
     color: #efb467;
   }
+  a {
+    width: 100%;
+  }
 `;
 
 export const Button = styled.button`
@@ -112,6 +115,8 @@ export const Button = styled.button`
 
   flex: none;
   flex-grow: 0;
+  
+  cursor: pointer;
 
   :hover {
     border-bottom: 5px solid #e59967;
@@ -145,6 +150,7 @@ export const Home = styled.div`
   @media (max-width: 900px) {
     display: flex;
     align-items: center;
+    justify-content: space-between;
   }
 `;
 

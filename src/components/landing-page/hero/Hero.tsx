@@ -15,6 +15,7 @@ import {
 } from "./Hero.style";
 
 import Card from "../card/Card";
+import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
 
 /* Background Images */
 import { ReactComponent as BackgroundTop } from "../../../assets/background/vectorTop.svg";
@@ -24,7 +25,7 @@ import { ReactComponent as BackgroundLow } from "../../../assets/background/vect
 const Hero = () => {
   return (
     <Container>
-    {/* TODO Solve for mobile */}
+      {/* TODO Solve for mobile */}
       <BgTop>
         <BackgroundTop />
       </BgTop>
@@ -43,7 +44,9 @@ const Hero = () => {
             Quotastic is free online platform for you to explore the quips,
             quotes, and proverbs. Sign up and express yourself.
           </h5>
-          <Button>Sign up</Button>
+          <Link to="/signup" style={{ textDecoration: "none" }}>
+            <Button>Sign up</Button>
+          </Link>
         </Tittle>
         {/* TODO Maybe solve with  CSS Grid */}
         <FeturedQuotes>

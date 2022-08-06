@@ -168,6 +168,10 @@ export const Tittle = styled.div`
       line-height: 28px;
       color: #000000;
     }
+    a {
+      width: 100%;
+      margin-left: 30px;
+    }
   }
 `;
 
@@ -265,6 +269,8 @@ export const Button = styled.button`
   background: linear-gradient(257.39deg, #efb467 0%, #de8667 100%);
   // Text color
   color: #ffffff;
+
+  cursor: pointer;
 
   :hover {
     border-bottom: 5px solid #e59967;
