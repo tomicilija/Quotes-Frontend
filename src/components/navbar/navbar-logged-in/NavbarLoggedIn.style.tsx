@@ -140,6 +140,21 @@ export const Button = styled.button`
     padding: 8px 16px;
     width: 100%;
   }
+  @media (max-width: 900px) {
+    display: none;
+  }
+`;
+
+export const ButtonP = styled.button`
+  width: 25px;
+  height: 25px;
+
+  background: #ffffff;
+  border: none;
+
+  @media (max-width: 900px) {
+    display: none;
+  }
 `;
 
 export const MobileLink = styled.div`

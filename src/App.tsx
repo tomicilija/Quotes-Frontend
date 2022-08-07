@@ -13,6 +13,7 @@ import CardGrid from "./components/landing-page/card-grid/CardGrid";
 import Login from "./components/login/Login";
 import SignUp from "./components/sign-up/SignUp";
 import Profile from "./components/profile/Profile";
+import LandingPageLoggedIn from "./components/landing-page-logged-in/LandingPageLogedIn";
 import Footer from "./components/footer/Footer";
 
 class App extends React.Component {
@@ -49,6 +50,14 @@ class App extends React.Component {
             element={
               <div>
                 <NavbarProfile /> <Profile />
+              </div>
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              <div>
+                <NavbarLoggedIn /> <LandingPageLoggedIn />
               </div>
             }
           />
