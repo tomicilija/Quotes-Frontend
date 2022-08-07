@@ -11,7 +11,7 @@ import {
 
 import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
 import { ReactComponent as Backgroundimg } from "../../assets/background/vectorQuotations.svg";
-import { ReactComponent as DefaultProfilePicgture } from "../../assets/DefaultProfilePicture.svg";
+import { ReactComponent as DefaultProfilePicture } from "../../assets/DefaultProfilePicture.svg";
 
 const SignUp = () => {
   return (
@@ -26,7 +26,7 @@ const SignUp = () => {
           </h1>
           <h5>Your name will appear on quotes and your public profle.</h5>
         </SignUpHeader>
-        <DefaultProfilePicgture />
+        <DefaultProfilePicture />
         <SignUpForm>
           <SignUpFormSection>
             <label htmlFor="email">Email</label>

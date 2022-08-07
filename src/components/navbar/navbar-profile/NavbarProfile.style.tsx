@@ -148,16 +148,22 @@ export const Button = styled.button`
   cursor: pointer;
 
   div {
-    height: 140%;
   }
 
   @media (max-width: 900px) {
     display: none;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 8px 16px;
-    width: 100%;
+  }
+`;
+
+export const ButtonP = styled.button`
+  width: 25px;
+  height: 25px;
+
+  background: #ffffff;
+  border: none;
+
+  @media (max-width: 900px) {
+    display: none;
   }
 `;
 

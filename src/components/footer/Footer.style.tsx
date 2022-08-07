@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+// TODO: footer to always stay at the bottom of the page
 export const Container = styled.div`
   position: relative;
   

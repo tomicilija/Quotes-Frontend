@@ -5,6 +5,7 @@ import {
   Menu,
   ButtonWrapper,
   Button,
+  ButtonP,
   MobileLink,
   DesktopLink,
   BurgerMenu,
@@ -18,6 +19,7 @@ import { ReactComponent as LogoIconWhite } from "../../../assets/icons/navbar-lo
 import { ReactComponent as RightArrow } from "../../../assets/arrows/RightArrow.svg";
 import { ReactComponent as RightArrowOrange } from "../../../assets/arrows/RightArrow-orange.svg";
 import { ReactComponent as DefaultProfileIcon } from "../../../assets/icons/profile.svg";
+import { ReactComponent as DefaultProfileIcon1 } from "../../../assets/icons/user-profile-svgrepo-com.svg";
 import { ReactComponent as AddPicture } from "../../../assets/icons/add.svg";
 
 const Navbar = () => {
@@ -50,7 +52,7 @@ const Navbar = () => {
         <ButtonWrapper>
           <Link to="/" style={{ textDecoration: "none" }}>
             <MobileLink>
-                <DefaultProfileIcon />
+              <DefaultProfileIcon />
               <p>John Scott</p>
             </MobileLink>
           </Link>
@@ -92,9 +94,9 @@ const Navbar = () => {
 
           <Link to="/" style={{ textDecoration: "none" }}>
             <Button>
-              <div>
-                <DefaultProfileIcon />
-              </div>
+              <ButtonP>
+                <DefaultProfileIcon1 />
+              </ButtonP>
             </Button>
           </Link>
           <Link to="/" style={{ textDecoration: "none" }}>

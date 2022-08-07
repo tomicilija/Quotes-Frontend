@@ -169,8 +169,11 @@ export const Tittle = styled.div`
       color: #000000;
     }
     a {
-      width: 100%;
-      margin-left: 30px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      align-self: flex-start;
     }
   }
 `;
