@@ -161,6 +161,8 @@ export const ButtonP = styled.button`
 
   background: #ffffff;
   border: none;
+  
+  cursor: pointer;
 
   @media (max-width: 900px) {
     display: none;

@@ -34,7 +34,7 @@ const SignUp = () => {
           </SignUpFormSection>
           <TwoInRow>
             <SignUpFormSection>
-              <label htmlFor="firstName">Firts Name</label>
+              <label htmlFor="firstName">First Name</label>
               <input type="firstname" id="firstName" />
             </SignUpFormSection>
             <SignUpFormSection>

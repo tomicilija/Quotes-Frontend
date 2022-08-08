@@ -21,34 +21,53 @@ import { ReactComponent as RightArrowOrange } from "../../../assets/arrows/Right
 import { ReactComponent as DefaultProfileIcon } from "../../../assets/icons/profile.svg";
 import { ReactComponent as DefaultProfileIcon1 } from "../../../assets/icons/user-profile-svgrepo-com.svg";
 import { ReactComponent as AddPicture } from "../../../assets/icons/add.svg";
+import ProfileSettings from "../../modals/profile-settings/ProfileSettings";
+import CreateQuote from "../../modals/create-quote/CreateQuote";
 
 const Navbar = () => {
   // burger menu state
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isBurgerOpen, setIsBurgerOpen] = useState<boolean>(false);
+
+  // add quote state
+  const [isQuoteOpen, setIsQuoteOpen] = useState<boolean>(false);
+
+  // settings state
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+
+  const openQuoteModal = () => {
+    setIsQuoteOpen((prev) => !prev);
+  };
+
+  const openSettingsModal = () => {
+    setIsSettingsOpen((prev) => !prev);
+  };
 
   return (
     <Container>
-      <BurgerMenu onClick={() => setIsOpen((isOpen) => !isOpen)}>
-        <span className={isOpen ? "xmark" : "burger"}></span>
-        <span className={isOpen ? "xmark" : "burger"}></span>
-        <span className={isOpen ? "xmark" : "burger"}></span>
+      <BurgerMenu
+        onClick={() => setIsBurgerOpen((isBurgerOpen) => !isBurgerOpen)}
+      >
+        <span className={isBurgerOpen ? "xmark" : "burger"}></span>
+        <span className={isBurgerOpen ? "xmark" : "burger"}></span>
+        <span className={isBurgerOpen ? "xmark" : "burger"}></span>
       </BurgerMenu>
-      <Logo className={isOpen ? "black hideLogo" : "black showLogo"}>
+      <Logo className={isBurgerOpen ? "black hideLogo" : "black showLogo"}>
         <Link to="/" style={{ textDecoration: "none" }}>
           <LogoIcon />
         </Link>
       </Logo>
-      <Logo className={isOpen ? "white hideLogo" : "white showLogo"}>
+      <Logo className={isBurgerOpen ? "white hideLogo" : "white showLogo"}>
         <Link to="/" style={{ textDecoration: "none" }}>
           <LogoIconWhite />
         </Link>
       </Logo>
-      <AddMobile className={isOpen ? "hideButton" : "showButton"}>
-        <Link to="/" style={{ textDecoration: "none" }}>
-          <AddPicture />
-        </Link>
+      <AddMobile
+        onClick={openQuoteModal}
+        className={isBurgerOpen ? "hideButton" : "showButton"}
+      >
+        <AddPicture />
       </AddMobile>
-      <Menu className={isOpen ? "showMenuNav" : "hideMenuNav"}>
+      <Menu className={isBurgerOpen ? "showMenuNav" : "hideMenuNav"}>
         <ButtonWrapper>
           <Link to="/" style={{ textDecoration: "none" }}>
             <MobileLink>
@@ -62,12 +81,13 @@ const Navbar = () => {
               <RightArrow />
             </MobileLink>
           </Link>
-          <Link to="/" style={{ textDecoration: "none" }}>
-            <MobileLink>
+          {/* // To make styling work */}
+          <a>
+            <MobileLink onClick={openSettingsModal}>
               <p>Settings</p>
               <RightArrow />
             </MobileLink>
-          </Link>
+          </a>
           <Link to="/" style={{ textDecoration: "none" }}>
             <MobileLink>
               <p>
@@ -81,17 +101,14 @@ const Navbar = () => {
               <p>Home</p>
             </DesktopLink>
           </Link>
-          <Link to="/" style={{ textDecoration: "none" }}>
-            <DesktopLink>
-              <p>Settings</p>
-            </DesktopLink>
-          </Link>
+          <DesktopLink onClick={openSettingsModal}>
+            <p>Settings</p>
+          </DesktopLink>
           <Link to="/" style={{ textDecoration: "none" }}>
             <DesktopLink>
               <p>Logout</p>
             </DesktopLink>
           </Link>
-
           <Link to="/" style={{ textDecoration: "none" }}>
             <Button>
               <ButtonP>
@@ -99,13 +116,16 @@ const Navbar = () => {
               </ButtonP>
             </Button>
           </Link>
-          <Link to="/" style={{ textDecoration: "none" }}>
-            <Button>
-              <AddPicture />
-            </Button>
-          </Link>
+          <Button onClick={openQuoteModal}>
+            <AddPicture />
+          </Button>
         </ButtonWrapper>
       </Menu>
+      <ProfileSettings
+        isSettingsOpen={isSettingsOpen}
+        setIsSettingsOpen={setIsSettingsOpen}
+      />
+      <CreateQuote isQuoteOpen={isQuoteOpen} setIsQuoteOpen={setIsQuoteOpen} />
     </Container>
   );
 };
