@@ -8,12 +8,65 @@ import {
   TwoInRow,
   SigninText,
 } from "./SignUp.style";
+import { useState, useEffect } from "react";
 
-import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Link, Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { ReactComponent as Backgroundimg } from "../../assets/background/vectorQuotations.svg";
 import { ReactComponent as DefaultProfilePicture } from "../../assets/DefaultProfilePicture.svg";
 
 const SignUp = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  const navigate = useNavigate();
+
+  const [ErrorMessage, setErrorMessage] = useState("");
+
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
+
+    const signUpUrl = "http://localhost:5000/signup";
+
+    e.preventDefault();
+    const signUpData = {
+      email: email,
+      pass: password,
+      passConfirm: passwordConfirm,
+      name: firstName,
+      surname: lastName,
+    };
+
+    fetch(signUpUrl, {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify(signUpData),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          return res.text().then((text) => {
+            throw new Error(text);
+          });
+        } else {
+          return navigate("/login");
+        }
+      })
+      .catch((err) => {
+        const x = JSON.parse(err["message"]);
+        let message;
+        if (Array.isArray(x)) {
+          message = x["message" as any].filter(
+            (v: any, i: any, a: any) =>
+              a.findIndex((v2: any) => v2.id === v.id) === i
+          );
+        } else message = x["message"];
+        setErrorMessage(message);
+      });
+  };
+
   return (
     <Container>
       <Background>
@@ -25,37 +78,65 @@ const SignUp = () => {
             What is your <span>name?</span>
           </h1>
           <h5>Your name will appear on quotes and your public profle.</h5>
+          <h3>
+            {ErrorMessage}
+          </h3>
         </SignUpHeader>
         <DefaultProfilePicture />
-        <SignUpForm>
-          <SignUpFormSection>
-            <label htmlFor="email">Email</label>
-            <input type="email" id="email" />
-          </SignUpFormSection>
-          <TwoInRow>
+        <form onSubmit={handleSubmit}>
+          <SignUpForm>
             <SignUpFormSection>
-              <label htmlFor="firstName">First Name</label>
-              <input type="firstname" id="firstName" />
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                value={email}
+                required
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </SignUpFormSection>
+            <TwoInRow>
+              <SignUpFormSection>
+                <label htmlFor="firstName">First Name</label>
+                <input
+                  type="firstname"
+                  value={firstName}
+                  required
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </SignUpFormSection>
+              <SignUpFormSection>
+                <label htmlFor="lastName">Last Name</label>
+                <input
+                  type="lastname"
+                  value={lastName}
+                  required
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </SignUpFormSection>
+            </TwoInRow>
+            <SignUpFormSection>
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                value={password}
+                required
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </SignUpFormSection>
             <SignUpFormSection>
-              <label htmlFor="lastName">Last Name</label>
-              <input type="lastname" id="lastName" />
+              <label htmlFor="confirmPassword">Confirm Password</label>
+              <input
+                type="password"
+                value={passwordConfirm}
+                required
+                onChange={(e) => setPasswordConfirm(e.target.value)}
+              />
             </SignUpFormSection>
-          </TwoInRow>
-          <SignUpFormSection>
-            <label htmlFor="password">Password</label>
-            <input type="password" id="password" />
-          </SignUpFormSection>
-          <SignUpFormSection>
-            <label htmlFor="confirmPassword">Confirm Password</label>
-            <input type="password" id="confirmPassword" />
-          </SignUpFormSection>
-          <SignUpFormSection>
-            <Link to="/profile" style={{ textDecoration: "none" }}>
-              <button type="submit">Login</button>
-            </Link>
-          </SignUpFormSection>
-        </SignUpForm>
+            <SignUpFormSection>
+              <button type="submit">Sign up</button>
+            </SignUpFormSection>
+          </SignUpForm>
+        </form>
         <SigninText>
           Already have an account?{" "}
           <Link to="/login" style={{ textDecoration: "none" }}>

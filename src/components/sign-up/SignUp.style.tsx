@@ -69,6 +69,16 @@ export const SignUpHeader = styled.div`
       color: #e59967;
     }
   }
+  h3 {
+    margin-top: 20px;
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: red;
+  }
+
   h5 {
     font-family: "Raleway";
     font-style: normal;
