@@ -1,10 +1,5 @@
 import styled from "styled-components";
 
-// TODO: footer to always stay at the bottom of the page
-
-// Position fixed
-//min height 100vh
-
 export const Container = styled.div`
   position: relative;
   
@@ -24,6 +19,7 @@ export const Container = styled.div`
 
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
   border-radius: 32px 32px 0px 0px;
+  
 
   @media (max-width: 900px) {
     display: flex;

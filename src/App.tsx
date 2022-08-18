@@ -3,13 +3,6 @@ import "./App.css";
 
 import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
 import React from "react";
-import NavbarLoggedOut from "./components/navbar/navbar-logged-out/NavbarLoggedOut";
-import NavbarLoggedIn from "./components/navbar/navbar-logged-in/NavbarLoggedIn";
-import NavbarSignup from "./components/navbar/navbar-signup/NavbarSignup";
-import NavbarLogin from "./components/navbar/navbar-login/NavbarLogin";
-import NavbarProfile from "./components/navbar/navbar-profile/NavbarProfile";
-import Hero from "./components/landing-page/hero/Hero";
-import CardGrid from "./components/landing-page/card-grid/CardGrid";
 import Login from "./components/login/Login";
 import SignUp from "./components/sign-up/SignUp";
 import Profile from "./components/profile/Profile";
