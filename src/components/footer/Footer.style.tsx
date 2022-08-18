@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
 // TODO: footer to always stay at the bottom of the page
+
+// Position fixed
+//min height 100vh
+
 export const Container = styled.div`
   position: relative;
   

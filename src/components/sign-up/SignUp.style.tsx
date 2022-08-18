@@ -1,6 +1,5 @@
 import styled from "styled-components";
 
-/* Hero */
 export const Container = styled.div`
   position: relative;
   width: 100%;
@@ -69,6 +68,7 @@ export const SignUpHeader = styled.div`
       color: #e59967;
     }
   }
+
   h3 {
     margin-top: 20px;
     font-family: "Raleway";
@@ -91,13 +91,17 @@ export const SignUpHeader = styled.div`
 
 export const SignUpForm = styled.div`
   position: relative;
-  width: 100%;
+  width: 420px;
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 16px;
+
+  @media (max-width: 900px) {
+    width: 80vw;
+  }
 `;
 
 export const SignUpFormSection = styled.div`

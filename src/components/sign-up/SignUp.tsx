@@ -26,10 +26,9 @@ const SignUp = () => {
   const [ErrorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
-
-    const signUpUrl = "http://localhost:5000/signup";
-
     e.preventDefault();
+    const signUpUrl = "http://localhost:5000/signup";
+    setErrorMessage("");
     const signUpData = {
       email: email,
       pass: password,
@@ -40,9 +39,9 @@ const SignUp = () => {
 
     fetch(signUpUrl, {
       method: "POST",
-      headers: new Headers({
+      headers: {
         "Content-Type": "application/json",
-      }),
+      },
       body: JSON.stringify(signUpData),
     })
       .then((res) => {

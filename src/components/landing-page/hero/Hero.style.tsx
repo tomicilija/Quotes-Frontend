@@ -22,6 +22,7 @@ export const BgTop = styled.div`
   z-index: -1;
   width: 100%;
 
+  // remove
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;

@@ -15,52 +15,20 @@ import SignUp from "./components/sign-up/SignUp";
 import Profile from "./components/profile/Profile";
 import LandingPageLoggedIn from "./components/landing-page-logged-in/LandingPageLogedIn";
 import Footer from "./components/footer/Footer";
+import LandingPage from "./components/landing-page/LandingPage";
+import Navbar from "./components/navbar/Navbar";
 
 class App extends React.Component {
   render() {
     return (
       <BrowserRouter>
+        <Navbar />
         <Routes>
-          <Route
-            path="/"
-            element={
-              <div>
-                <NavbarLoggedOut /> <Hero /> <CardGrid />
-              </div>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <div>
-                <NavbarSignup /> <SignUp />
-              </div>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <div>
-                <NavbarLogin /> <Login />
-              </div>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <div>
-                <NavbarProfile /> <Profile />
-              </div>
-            }
-          />
-          <Route
-            path="/home"
-            element={
-              <div>
-                <NavbarLoggedIn /> <LandingPageLoggedIn />
-              </div>
-            }
-          />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/home" element={<LandingPageLoggedIn />} />
         </Routes>
         <Footer />
       </BrowserRouter>

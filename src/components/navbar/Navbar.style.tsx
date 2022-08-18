@@ -17,6 +17,7 @@ export const Container = styled.div`
     position: relative;
     padding: 30px 35px;
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
+    background-color: white;
   }
 `;
 
@@ -33,8 +34,26 @@ export const Logo = styled.div`
   &.hideLogo {
     display: none;
   }
+  &.white {
+    display: flex;
+  }
+  &.black {
+    display: none;
+  }
+
   @media (max-width: 900px) {
     justify-content: flex-end;
+
+    &.white {
+      display: none;
+    }
+    &.black {
+      display: flex;
+
+      &.hideLogo {
+        display: none;
+      }
+    }
   }
 `;
 
@@ -61,27 +80,25 @@ export const Menu = styled.div`
 `;
 
 export const ButtonWrapper = styled.div`
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
-  position: relative;
   padding: 0px;
-  gap: 48px;
+  gap: 32px;
 
   @media (max-width: 900px) {
     flex-direction: column;
-    gap: 20px;
+    gap: 0px;
     width: 100%;
   }
 
   .signup {
     background: linear-gradient(257.39deg, #efb467 0%, #de8667 100%);
-    // Text color
     color: #ffffff;
   }
   .login {
     background: #ffffff;
-    // Text color
     color: #efb467;
   }
   a {
@@ -130,6 +147,7 @@ export const Button = styled.button`
     align-items: center;
     padding: 8px 16px;
     width: 100%;
+    margin-top: 20px;
   }
 `;
 
@@ -188,5 +206,119 @@ export const BurgerMenu = styled.div`
   }
   @media (max-width: 900px) {
     display: flex;
+  }
+`;
+
+export const AddMobile = styled.div`
+  display: none;
+  @media (max-width: 900px) {
+    width: 50px;
+    display: flex;
+
+    &.showButton {
+      display: flex;
+    }
+    &.hideButton {
+      display: none;
+    }
+  }
+`;
+
+export const ButtonLoggedin = styled.button`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+
+  background: #ffffff;
+  border-radius: 60px;
+  border: none;
+
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+
+  font-family: "Raleway";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  text-align: center;
+
+  flex: none;
+  cursor: pointer;
+
+  div {
+    height: 140%;
+  }
+
+  @media (max-width: 900px) {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 16px;
+    width: 100%;
+  }
+  @media (max-width: 900px) {
+    display: none;
+  }
+`;
+
+export const ButtonP = styled.button`
+  width: 25px;
+  height: 25px;
+
+  background: #ffffff;
+  border: none;
+
+  cursor: pointer;
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+`;
+
+export const MobileLink = styled.div`
+  display: none;
+  padding: 0px;
+
+  cursor: pointer;
+  p {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 28px;
+
+    color: #322d38;
+    span {
+      color: #de8667;
+    }
+  }
+
+  @media (max-width: 900px) {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+`;
+
+export const DesktopLink = styled.div`
+  display: flex;
+  padding: 0px;
+  p {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #ffffff;
+    cursor: pointer;
+  }
+  @media (max-width: 900px) {
+    display: none;
   }
 `;
