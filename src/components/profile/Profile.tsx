@@ -13,82 +13,113 @@ import {
   Likes,
   CardWrapper,
   SeeMore,
+  NotFound,
 } from "./Profile.style";
 import Masonry from "react-masonry-css";
 
-import Card from "../landing-page/card/Card";
+import Card from "../card/Card";
 import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
 import { ReactComponent as DefaultProfileIcon } from "../../assets/icons/user-profile-svgrepo-com.svg";
+import { getUser, getUserVotes } from "../../api/UserApi";
+import { getMyQuote } from "../../api/QuoteApi";
+import CardGrid from "../card-grid/CardGrid";
 
-
-const breakpointColumnsObj = {
-  default: 3,
-  1340: 2,
-  900: 1,
-};
+let loaded = false;
 
 const Profile = () => {
-  // Show only 4 cards on mobile & 9 on desktop
-  const [isDesktop, setDesktop] = useState(window.innerWidth > 1340);
+  const isLoggedIn = localStorage.getItem("accessToken");
 
-  const updateMedia = () => {
-    setDesktop(window.innerWidth > 1340);
-  };
+  const [userId, setUserId] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [userQquote, setUserQquote] = useState("");
+  const [userKarma, setUserKarma] = useState(0);
+  const [userVotes, setUserVotes] = useState([
+    { karma: 0, text: "", name: "", surname: "" },
+  ]);
 
-  useEffect(() => {
-    window.addEventListener("resize", updateMedia);
-    return () => window.removeEventListener("resize", updateMedia);
-  });
+  if (isLoggedIn) {
+    getUser(JSON.parse(isLoggedIn!))
+      .then(({ name, surname, id }) => {
+        setFirstName(name);
+        setLastName(surname);
+        setUserId(id);
+      })
+      .catch((e) => {
+        console.log("Error: Cant get user" + e);
+        //isLoggedIn = null;
+        //localStorage.clear();
+      });
+    getMyQuote(JSON.parse(isLoggedIn!))
+      .then(({ text, karma }) => {
+        setUserQquote(text);
+        setUserKarma(karma);
+      })
+      .catch((e) => {
+        //console.log("Error! Cant get users quote: " + e);
+      });
+
+    // DOES NOT WORK
+    if (userId) {
+      getUserVotes(userId, JSON.parse(isLoggedIn!))
+        .then((res) => {
+          if (!loaded) {
+            //console.log(res);
+            setUserVotes(res);
+            loaded = true;
+          }
+        })
+        .catch((e) => {
+          console.log("Error! Cant get users votes: " + e);
+        });
+    }
+  }
 
   return (
     <Container>
-      <Background />
-      <BackgroundW />
-      <ProfileBanner>
-        <ProfilePicture>
-          <ProfilePictureicon>
-            <DefaultProfileIcon />
-          </ProfilePictureicon>
-        </ProfilePicture>
-        <ProfileInfo>
-          <ProfileName>John Doe</ProfileName>
-          <ProfileKarma>
-            Quotastic Karma
-            <p>100</p>
-          </ProfileKarma>
-        </ProfileInfo>
-      </ProfileBanner>
-      <Quote>
-        Quote
-        <Card />
-      </Quote>
-      <Likes>
-        Likes
-        <CardWrapper>
-          {/* Show only 4 cards on mobile & 9 on desktop */}
-          {isDesktop ? (
-            <Masonry
-              breakpointCols={breakpointColumnsObj}
-              className="my-masonry-grid"
-            >
-              {[...Array(6)].map((_, i) => (
-                <Card />
-              ))}
-            </Masonry>
-          ) : (
-            <Masonry
-              breakpointCols={breakpointColumnsObj}
-              className="my-masonry-grid"
-            >
-              {[...Array(4)].map((_, i) => (
-                <Card />
-              ))}
-            </Masonry>
-          )}
-
-          <SeeMore>Load more</SeeMore>
-        </CardWrapper>
-      </Likes>
+      {isLoggedIn ? (
+        <>
+          <Background />
+          <BackgroundW />
+          <ProfileBanner>
+            <ProfilePicture>
+              <ProfilePictureicon>
+                <DefaultProfileIcon />
+              </ProfilePictureicon>
+            </ProfilePicture>
+            <ProfileInfo>
+              <ProfileName>
+                {firstName} {lastName}
+              </ProfileName>
+              <ProfileKarma>
+                Quotastic Karma
+                <p>{userKarma}</p>
+              </ProfileKarma>
+            </ProfileInfo>
+          </ProfileBanner>
+          <Quote>
+            Quote
+            <Card
+              quote={userQquote}
+              firstName={firstName}
+              lastName={lastName}
+              karma={userKarma}
+            />
+          </Quote>
+          <Likes>
+            Likes
+            <CardGrid quotes={userVotes} />
+          </Likes>
+        </>
+      ) : (
+        <NotFound>
+          <h1>Error 402! Unauthorized</h1>
+          <p>You are not logged in. Please log in to see your profile..</p>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            Go to homepage
+          </Link>
+        </NotFound>
+      )}
     </Container>
   );
 };

@@ -54,7 +54,7 @@ const Navbar = () => {
         <span className={isBurgerOpen ? "xmark" : "burger"}></span>
         <span className={isBurgerOpen ? "xmark" : "burger"}></span>
       </BurgerMenu>
-      {location.pathname === "/profile" ? (
+      {location.pathname === "/profile" && isLoggedIn ? (
         <>
           <Logo className={isBurgerOpen ? "black hideLogo" : "black showLogo"}>
             <Link to="/" style={{ textDecoration: "none" }}>
@@ -103,7 +103,7 @@ const Navbar = () => {
                 <MobileLink
                   onClick={() => {
                     localStorage.clear();
-                    window.location.reload();
+                    window.location.href = "/";
                   }}
                 >
                   <p>
@@ -122,7 +122,7 @@ const Navbar = () => {
               <DesktopLink
                 onClick={() => {
                   localStorage.clear();
-                  window.location.reload();
+                  window.location.href = "/";
                 }}
               >
                 <p>Logout</p>

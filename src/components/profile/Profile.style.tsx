@@ -4,6 +4,7 @@ export const Container = styled.div`
   position: relative;
   overflow-x: hidden;
   width: 100%;
+  min-height: calc(100vh - 65px);
 
   gap: 50px;
 
@@ -13,9 +14,6 @@ export const Container = styled.div`
   justify-content: flex-start; //  flex-start | flex-end | center | space-between | space-around | space-evenly
   align-items: center;
 
-  @media (max-width: 900px) {
-    margin: -103px 0;
-  }
 `;
 
 export const Background = styled.div`
@@ -247,5 +245,64 @@ export const SeeMore = styled.div`
   :hover {
     border-bottom: 5px solid #e59967;
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+export const NotFound = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  flex-direction: column;
+  width: 100%;
+  height: 60vh;
+  h1 {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 35px;
+    line-height: 41px;
+    letter-spacing: 0.25px;
+    text-align: center;
+    margin: 20px;
+    color: #e59967;
+  }
+  p {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+    margin: 20px;
+    color: #000000;
+  }
+  a {
+  }
+  @media (max-width: 900px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: auto;
+    h4 {
+      font-family: "Raleway";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 28px;
+      text-align: center;
+      color: #e59967;
+    }
+    p {
+      width: 300px;
+      font-family: "Raleway";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 19px;
+      text-align: center;
+    }
   }
 `;
