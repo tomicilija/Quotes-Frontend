@@ -13,7 +13,6 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: flex-start; //  flex-start | flex-end | center | space-between | space-around | space-evenly
   align-items: center;
-
 `;
 
 export const Background = styled.div`
@@ -178,14 +177,18 @@ export const Quote = styled.div`
 export const Likes = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   padding: 16px 32px;
 
-  font-family: "Raleway";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 24px;
-  line-height: 28px;
+  h3 {
+    width: 100%;
+    align-items: flex-start;
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 28px;
+  }
 
   @media (max-width: 900px) {
   }
@@ -278,15 +281,13 @@ export const NotFound = styled.div`
     margin: 20px;
     color: #000000;
   }
-  a {
-  }
   @media (max-width: 900px) {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     margin: auto;
-    h4 {
+    h1 {
       font-family: "Raleway";
       font-style: normal;
       font-weight: 400;

@@ -1,4 +1,4 @@
-import { Container, Tittle, CardWrapper, SeeMore } from "./CardGrid.style";
+import { CardWrapper, NotFound } from "./CardGrid.style";
 import Masonry from "react-masonry-css";
 import Card from "../card/Card";
 import { useState, useEffect } from "react";
@@ -12,33 +12,19 @@ const breakpointColumnsObj = {
 };
 
 interface QuotesGridProps {
-  quotes: 
-    {
-      //userId: number,
-      karma: number,
-      text: string,
-      name: string,
-      surname: string,
-    }[];
+  quotes: {
+    //userId: number,
+    karma: number;
+    text: string;
+    name: string;
+    surname: string;
+  }[];
 }
 
 const CardGrid: React.FC<QuotesGridProps> = ({ quotes }) => {
-  // Show only 4 cards on mobile & 9 on desktop
-  const [isDesktop, setDesktop] = useState(window.innerWidth > 1340);
-
-  const updateMedia = () => {
-    setDesktop(window.innerWidth > 1340);
-  };
-
-  useEffect(() => {
-    window.addEventListener("resize", updateMedia);
-    return () => window.removeEventListener("resize", updateMedia);
-  });
-
-  return (
-    <CardWrapper>
-      {/* Show only 4 cards on mobile & 9 on desktop */}
-      {isDesktop ? (
+  if (quotes) {
+    return (
+      <CardWrapper>
         <Masonry
           breakpointCols={breakpointColumnsObj}
           className="my-masonry-grid"
@@ -52,24 +38,12 @@ const CardGrid: React.FC<QuotesGridProps> = ({ quotes }) => {
             />
           ))}
         </Masonry>
-      ) : (
-        <Masonry
-          breakpointCols={breakpointColumnsObj}
-          className="my-masonry-grid"
-        >
-          {quotes.map((value) => (
-            <Card
-              quote={value.text}
-              firstName={value.name}
-              lastName={value.surname}
-              karma={value.karma}
-            />
-          ))}
-        </Masonry>
-      )}
-      <SeeMore>Load more</SeeMore>
-    </CardWrapper>
-  );
+      </CardWrapper>
+    );
+  } else {
+    /* If no quotes exist */
+    return <NotFound> <h1>OOPS!</h1> <p>This is looking a little empty</p></NotFound>;
+  }
 };
 
 export default CardGrid;

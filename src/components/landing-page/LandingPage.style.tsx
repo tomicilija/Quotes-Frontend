@@ -137,13 +137,13 @@ export const Quote = styled.div`
 export const MostUpvoated = styled.div`
   position: relative;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   margin-bottom: 100px;
 
   @media (max-width: 900px) {
-    margin-top: -50px;
     margin-bottom: 0;
   }
 `;
@@ -181,7 +181,6 @@ export const Tittle = styled.div`
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: 50px;
     h4 {
       font-family: "Raleway";
       font-style: normal;
@@ -270,120 +269,56 @@ export const HeroTittle = styled.div`
   }
 `;
 
-export const CardWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  margin-top: 50px;
-
-  position: relative;
-  top: 15%;
-
-  .my-masonry-grid {
-    display: flex;
-    width: auto;
-  }
-
-  @media (max-width: 900px) {
-  }
-`;
-
-export const SeeMore = styled.div`
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin: 50px;
-
-  width: 200px;
-  height: 40px;
-
-  background: #ffffff;
-  border: 2px solid #de8667;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 32px;
-
-  font-family: "Raleway";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 19px;
-
-  text-align: center;
-
-  color: #de8667;
-  cursor: pointer;
-
-  :hover {
-    border-bottom: 5px solid #e59967;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
-  }
-  @media (max-width: 900px) {
-    margin-top: 0px;
-    margin-bottom: 50px;
-  }
-`;
-
 export const FeturedQuotes = styled.div`
   position: relative;
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+
   @media (max-width: 900px) {
     margin-left: 0;
     max-width: 350px;
   }
 `;
 
-export const FeturedFront = styled.div`
+export const FeturedTop = styled.div`
   position: relative;
-  z-index: 3;
+  z-index: 2;
+  order: 1;
+  margin: -60px 0 -60px 0;
 
-  margin-top: 50px;
+  transform: scale(0.9);
 
-  @media (max-width: 900px) {
-    margin-left: 0;
-    margin-top: 50px;
-  }
+  -webkit-filter: blur(1.5px);
+  -moz-filter: blur(1.5px);
+  -o-filter: blur(1.5px);
+  -ms-filter: blur(1.5px);
+  filter: blur(1.5px);
 `;
 
 export const FeturedMid = styled.div`
   position: relative;
-  z-index: 2;
-
-  margin-top: -230px;
-
-  transform: scale(0.9);
-
-  -webkit-filter: blur(2px);
-  -moz-filter: blur(2px);
-  -o-filter: blur(2px);
-  -ms-filter: blur(2px);
-  filter: blur(2px);
-
-  @media (max-width: 900px) {
-    margin-left: 0;
-    margin-top: -240px;
-  }
+  z-index: 3;
+  order: 2;
+  //margin-top: 25%;
 `;
 
-export const FeturedBack = styled.div`
+export const FeturedBottom = styled.div`
   position: relative;
   z-index: 1;
-
-  margin-top: 70px;
+  order: 3;
+  margin: -60px 0 -60px 0;
 
   transform: scale(0.9);
 
-  -webkit-filter: blur(2px);
-  -moz-filter: blur(2px);
-  -o-filter: blur(2px);
-  -ms-filter: blur(2px);
-  filter: blur(2px);
-
-  @media (max-width: 900px) {
-    margin-left: 0;
-    margin-top: 70px;
-  }
+  -webkit-filter: blur(1.5px);
+  -moz-filter: blur(1.5px);
+  -o-filter: blur(1.5px);
+  -ms-filter: blur(1.5px);
+  filter: blur(1.5px);
 `;
 
 export const Button = styled.button`
@@ -472,5 +407,45 @@ export const Slogan = styled.div`
         color: #e59967;
       }
     }
+  }
+`;
+
+export const SeeMore = styled.div`
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 50px;
+
+  width: 200px;
+  height: 40px;
+
+  background: #ffffff;
+  /* Orange */
+
+  border: 2px solid #de8667;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 32px;
+
+  /* P desktop */
+
+  font-family: "Raleway";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  /* identical to box height */
+
+  text-align: center;
+
+  /* Orange */
+
+  color: #de8667;
+  cursor: pointer;
+
+  :hover {
+    border-bottom: 5px solid #e59967;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
   }
 `;

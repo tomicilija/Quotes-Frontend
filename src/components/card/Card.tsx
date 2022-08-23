@@ -1,8 +1,7 @@
 import {
   Container,
   Votes,
-  UpArrow,
-  DownArrow,
+  Arrow,
   VotesValue,
   Quote,
   QuoteAuthor,
@@ -35,13 +34,13 @@ const Card: React.FC<VoteCardProps>  = ({
   return (
     <Container>
       <Votes>
-        <UpArrow>
+        <Arrow>
           <Upvote />
-        </UpArrow>
+        </Arrow>
         <VotesValue>{karma}</VotesValue>
-        <DownArrow>
+        <Arrow>
           <DownVote />
-        </DownArrow>
+        </Arrow>
       </Votes>
       <Quote>
         <QuoteText>

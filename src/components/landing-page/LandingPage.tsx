@@ -10,43 +10,138 @@ import {
   MostUpvoated,
   Tittle,
   HeroTittle,
-  CardWrapper,
-  SeeMore,
   FeturedQuotes,
-  FeturedFront,
+  FeturedTop,
   FeturedMid,
-  FeturedBack,
+  FeturedBottom,
   SloganWrapper,
   Slogan,
   Button,
+  SeeMore,
 } from "./LandingPage.style";
-import Masonry from "react-masonry-css";
-import Card from "../landing-page/card/Card";
 import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
+
+import Card from "../card/Card";
+import { getUser, getUserVotes } from "../../api/UserApi";
+import { getList, getMyQuote, getRecent } from "../../api/QuoteApi";
+import CardGrid from "../card-grid/CardGrid";
 
 /* Background Images */
 import { ReactComponent as BackgroundTop } from "../../assets/background/vectorTop.svg";
 import { ReactComponent as BackgroundMid } from "../../assets/background/vectorMid.svg";
 import { ReactComponent as BackgroundLow } from "../../assets/background/vectorLow.svg";
 
-const breakpointColumnsObj = {
-  default: 3,
-  1340: 2,
-  900: 1,
-};
+let loaded = false;
+let loaded2 = false;
+
+export interface QuoteRes {
+  //userId: number,
+  karma: number;
+  text: string;
+  name: string;
+  surname: string;
+}
+
 const LandingPage = () => {
   const isLoggedIn = localStorage.getItem("accessToken");
+
+  const [userId, setUserId] = useState("");
+
+  const [mostLikedQuotes, setMostLikedQuotes] = useState<QuoteRes[]>([]);
+  const [recentQuotes, setRecentQuotes] = useState<QuoteRes[]>([]);
+  const [showedLikedQuotesDesktop, setShowedLikedQuotesDesktop] = useState(9);
+  const [showedRecentQuotesDesktop, setShowedRecentQuotesDesktop] = useState(9);
+  const [showedLikedQuotesMobile, setShowedLikedQuotesMobile] = useState(4);
+  const [showedRecentQuotesMobile, setShowedRecentQuotesMobile] = useState(4);
+  const [randomQuote, setRandomQuote] = useState<QuoteRes>({
+    karma: 0,
+    text: "",
+    name: "",
+    surname: "",
+  });
+  const [heroQuote1, setHeroQuote1] = useState<QuoteRes>({
+    karma: 0,
+    text: "",
+    name: "",
+    surname: "",
+  });
+  const [heroQuote2, setHeroQuote2] = useState<QuoteRes>({
+    karma: 0,
+    text: "",
+    name: "",
+    surname: "",
+  });
+  const [heroQuote3, setHeroQuote3] = useState<QuoteRes>({
+    karma: 0,
+    text: "",
+    name: "",
+    surname: "",
+  });
+
+  const loadLikedQuotesDesktop = () => {
+    setShowedLikedQuotesDesktop((prevValue) => prevValue + 9);
+  };
+
+  const loadLikedQuotesMobile = () => {
+    setShowedLikedQuotesMobile((prevValue) => prevValue + 4);
+  };
+
+  const loadRecentQuotesDesktop = () => {
+    setShowedRecentQuotesDesktop((prevValue) => prevValue + 9);
+  };
+
+  const loadRecentQuotesMobile = () => {
+    setShowedRecentQuotesMobile((prevValue) => prevValue + 4);
+  };
+
+  useEffect(() => {
+    // Fix so we dont need if
+    if (!loaded2) {
+      getList("karma", 1).then((quotes) => {
+        console.log(quotes);
+        setMostLikedQuotes(quotes);
+        setRandomQuote(quotes[Math.floor(Math.random() * quotes.length)]);
+        setHeroQuote1(quotes[0]);
+        setHeroQuote2(quotes[1]);
+        setHeroQuote3(quotes[2]);
+        loaded2 = true;
+      });
+    }
+    if (isLoggedIn) {
+      getUser(JSON.parse(isLoggedIn!))
+        .then(({ name, surname, id }) => {
+          //setFirstName(name);
+          //setLastName(surname);
+          setUserId(id);
+          //console.log(name);
+        })
+        .catch((e) => {
+          console.log("Error: Cant get user" + e);
+          //isLoggedIn = null;
+          //localStorage.clear();
+        });
+
+      // Fix so we dont need if
+      if (userId && !loaded) {
+        getRecent("karma", 1, JSON.parse(isLoggedIn!)).then((quotes) => {
+          console.log(quotes);
+          setRecentQuotes(quotes);
+          loaded = true;
+        });
+      }
+    }
+  });
+
   // Show only 4 cards on mobile & 9 on desktop
   const [isDesktop, setDesktop] = useState(window.innerWidth > 1340);
-
   const updateMedia = () => {
     setDesktop(window.innerWidth > 1340);
   };
-
   useEffect(() => {
     window.addEventListener("resize", updateMedia);
     return () => window.removeEventListener("resize", updateMedia);
   });
+
   return (
     <Container>
       <BgTop>
@@ -63,7 +158,12 @@ const LandingPage = () => {
           <Quote>
             Quote of the day
             <span>Quote of the day is randomly choosen quote.</span>
-            <Card />
+            <Card
+              quote={randomQuote.text}
+              firstName={randomQuote.name}
+              lastName={randomQuote.surname}
+              karma={randomQuote.karma}
+            />
           </Quote>
           <MostUpvoated>
             <Tittle>
@@ -73,29 +173,21 @@ const LandingPage = () => {
                 like to keep them saved in your profile.
               </p>
             </Tittle>
-            <CardWrapper>
-              {/* Show only 4 cards on mobile & 9 on desktop */}
-              {isDesktop ? (
-                <Masonry
-                  breakpointCols={breakpointColumnsObj}
-                  className="my-masonry-grid"
-                >
-                  {[...Array(9)].map((_, i) => (
-                    <Card />
-                  ))}
-                </Masonry>
-              ) : (
-                <Masonry
-                  breakpointCols={breakpointColumnsObj}
-                  className="my-masonry-grid"
-                >
-                  {[...Array(4)].map((_, i) => (
-                    <Card />
-                  ))}
-                </Masonry>
-              )}
-              <SeeMore>Load more</SeeMore>
-            </CardWrapper>
+            {isDesktop ? (
+              <>
+                <CardGrid
+                  quotes={mostLikedQuotes.slice(0, showedLikedQuotesDesktop)}
+                />
+                <SeeMore onClick={loadLikedQuotesDesktop}>Load more</SeeMore>
+              </>
+            ) : (
+              <>
+                <CardGrid
+                  quotes={mostLikedQuotes.slice(0, showedLikedQuotesMobile)}
+                />
+                <SeeMore onClick={loadLikedQuotesMobile}>Load more</SeeMore>
+              </>
+            )}
           </MostUpvoated>
           <MostUpvoated>
             <Tittle>
@@ -105,29 +197,21 @@ const LandingPage = () => {
                 them that you seen the new quote and like the ones you like.
               </p>
             </Tittle>
-            <CardWrapper>
-              {/* Show only 4 cards on mobile & 9 on desktop */}
-              {isDesktop ? (
-                <Masonry
-                  breakpointCols={breakpointColumnsObj}
-                  className="my-masonry-grid"
-                >
-                  {[...Array(9)].map((_, i) => (
-                    <Card />
-                  ))}
-                </Masonry>
-              ) : (
-                <Masonry
-                  breakpointCols={breakpointColumnsObj}
-                  className="my-masonry-grid"
-                >
-                  {[...Array(4)].map((_, i) => (
-                    <Card />
-                  ))}
-                </Masonry>
-              )}
-              <SeeMore>Load more</SeeMore>
-            </CardWrapper>
+            {isDesktop ? (
+              <>
+                <CardGrid
+                  quotes={recentQuotes.slice(0, showedRecentQuotesDesktop)}
+                />
+                <SeeMore onClick={loadRecentQuotesDesktop}>Load more</SeeMore>
+              </>
+            ) : (
+              <>
+                <CardGrid
+                  quotes={recentQuotes.slice(0, showedRecentQuotesMobile)}
+                />
+                <SeeMore onClick={loadRecentQuotesMobile}>Load more</SeeMore>
+              </>
+            )}
           </MostUpvoated>
         </Wrapper>
       ) : (
@@ -146,15 +230,30 @@ const LandingPage = () => {
               </Link>
             </HeroTittle>
             <FeturedQuotes>
-              <FeturedFront>
-                <Card />
-              </FeturedFront>
+              <FeturedTop>
+                <Card
+                  quote={heroQuote2.text}
+                  firstName={heroQuote2.name}
+                  lastName={heroQuote2.surname}
+                  karma={heroQuote2.karma}
+                />
+              </FeturedTop>
               <FeturedMid>
-                <Card />
+                <Card
+                  quote={heroQuote1.text}
+                  firstName={heroQuote1.name}
+                  lastName={heroQuote1.surname}
+                  karma={heroQuote1.karma}
+                />
               </FeturedMid>
-              <FeturedBack>
-                <Card />
-              </FeturedBack>
+              <FeturedBottom>
+                <Card
+                  quote={heroQuote3.text}
+                  firstName={heroQuote3.name}
+                  lastName={heroQuote3.surname}
+                  karma={heroQuote3.karma}
+                />
+              </FeturedBottom>
             </FeturedQuotes>
           </HeroWrapper>
           <SloganWrapper>
@@ -172,29 +271,14 @@ const LandingPage = () => {
                 like to keep them saved in your profile.
               </p>
             </Tittle>
-            <CardWrapper>
-              {/* Show only 4 cards on mobile & 9 on desktop */}
-              {isDesktop ? (
-                <Masonry
-                  breakpointCols={breakpointColumnsObj}
-                  className="my-masonry-grid"
-                >
-                  {[...Array(9)].map((_, i) => (
-                    <Card />
-                  ))}
-                </Masonry>
-              ) : (
-                <Masonry
-                  breakpointCols={breakpointColumnsObj}
-                  className="my-masonry-grid"
-                >
-                  {[...Array(4)].map((_, i) => (
-                    <Card />
-                  ))}
-                </Masonry>
-              )}
-              <SeeMore>Load more</SeeMore>
-            </CardWrapper>
+            {isDesktop ? (
+              <CardGrid quotes={mostLikedQuotes.slice(0, 9)} />
+            ) : (
+              <CardGrid quotes={mostLikedQuotes.slice(0, 4)} />
+            )}
+            <Link to="/signup" style={{ textDecoration: "none" }}>
+              <SeeMore>Sign up to see more</SeeMore>
+            </Link>
           </MostUpvoated>
         </>
       )}

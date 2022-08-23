@@ -11,15 +11,13 @@ import {
   ProfileKarma,
   Quote,
   Likes,
-  CardWrapper,
   SeeMore,
   NotFound,
 } from "./Profile.style";
-import Masonry from "react-masonry-css";
-
-import Card from "../card/Card";
 import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
 import { ReactComponent as DefaultProfileIcon } from "../../assets/icons/user-profile-svgrepo-com.svg";
+
+import Card from "../card/Card";
 import { getUser, getUserVotes } from "../../api/UserApi";
 import { getMyQuote } from "../../api/QuoteApi";
 import CardGrid from "../card-grid/CardGrid";
@@ -37,43 +35,63 @@ const Profile = () => {
   const [userVotes, setUserVotes] = useState([
     { karma: 0, text: "", name: "", surname: "" },
   ]);
+  const [showedQuotesDesktop, setShowedQuotesDesktop] = useState(9);
+  const [showedQuotesMobile, setShowedQuotesMobile] = useState(4);
 
-  if (isLoggedIn) {
-    getUser(JSON.parse(isLoggedIn!))
-      .then(({ name, surname, id }) => {
-        setFirstName(name);
-        setLastName(surname);
-        setUserId(id);
-      })
-      .catch((e) => {
-        console.log("Error: Cant get user" + e);
-        //isLoggedIn = null;
-        //localStorage.clear();
-      });
-    getMyQuote(JSON.parse(isLoggedIn!))
-      .then(({ text, karma }) => {
-        setUserQquote(text);
-        setUserKarma(karma);
-      })
-      .catch((e) => {
-        //console.log("Error! Cant get users quote: " + e);
-      });
+  const loadQuotesDesktop = () => {
+    setShowedQuotesDesktop((prevValue) => prevValue + 9);
+  };
 
-    // DOES NOT WORK
-    if (userId) {
-      getUserVotes(userId, JSON.parse(isLoggedIn!))
-        .then((res) => {
-          if (!loaded) {
-            //console.log(res);
-            setUserVotes(res);
-            loaded = true;
-          }
+  const loadQuotesMobile = () => {
+    setShowedQuotesMobile((prevValue) => prevValue + 4);
+  };
+
+  // Show only 4 cards on mobile & 9 on desktop
+  const [isDesktop, setDesktop] = useState(window.innerWidth > 1340);
+  const updateMedia = () => {
+    setDesktop(window.innerWidth > 1340);
+  };
+  useEffect(() => {
+    window.addEventListener("resize", updateMedia);
+    return () => window.removeEventListener("resize", updateMedia);
+  });
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      getUser(JSON.parse(isLoggedIn!))
+        .then(({ name, surname, id }) => {
+          setFirstName(name);
+          setLastName(surname);
+          setUserId(id);
         })
         .catch((e) => {
-          console.log("Error! Cant get users votes: " + e);
+          console.log("Error: Cant get user" + e);
+          //isLoggedIn = null;
+          //localStorage.clear();
         });
+
+      getMyQuote(JSON.parse(isLoggedIn!))
+        .then(({ text, karma }) => {
+          setUserQquote(text);
+          setUserKarma(karma);
+        })
+        .catch((e) => {
+          console.log("Error! Cant get users quote: " + e);
+        });
+
+      if (userId && !loaded) {
+        getUserVotes(userId, JSON.parse(isLoggedIn!))
+          .then((res) => {
+            console.log(res);
+            setUserVotes(res);
+            loaded = true;
+          })
+          .catch((e) => {
+            console.log("Error! Cant get users votes: " + e);
+          });
+      }
     }
-  }
+  });
 
   return (
     <Container>
@@ -107,8 +125,18 @@ const Profile = () => {
             />
           </Quote>
           <Likes>
-            Likes
-            <CardGrid quotes={userVotes} />
+            <h3>Likes</h3>
+            {isDesktop ? (
+              <>
+                <CardGrid quotes={userVotes.slice(0, showedQuotesDesktop)} />
+                <SeeMore onClick={loadQuotesDesktop}>Load more</SeeMore>
+              </>
+            ) : (
+              <>
+                <CardGrid quotes={userVotes.slice(0, showedQuotesMobile)} />
+                <SeeMore onClick={loadQuotesMobile}>Load more</SeeMore>
+              </>
+            )}
           </Likes>
         </>
       ) : (

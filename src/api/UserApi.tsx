@@ -30,8 +30,7 @@ interface UserWithEmailRes {
   name: string;
   surname: string;
 }
-
-interface QuoteRes {
+/*interface QuoteRes {
   quotes: {
     //userId: number,
     karma: number;
@@ -39,12 +38,7 @@ interface QuoteRes {
     name: string;
     surname: string;
   }[];
-}
-
-interface GetUserVotesRes {
-  votes: [QuoteRes];
-}
-
+}*/
 interface LoginRes {
   access_token: string;
 }
@@ -74,7 +68,7 @@ export const getUserVotes = (
   id: string,
   token: string
 ): Promise<[{ karma: 0; text: ""; name: ""; surname: "" }]> => {
-  //console.log(id);
+  console.log(id);
   return api
     .get(`/user/${id}`, {
       headers: {
@@ -83,14 +77,14 @@ export const getUserVotes = (
     })
     .then((res) => {
       if (res.data.length > 0) {
-        //console.log(res.data);
+        console.log(res.data);
         return res.data;
       } else {
         return "No votes";
       }
     })
     .catch((e) => {
-      //console.log(e);
+      console.log(e);
       return e;
     });
 };

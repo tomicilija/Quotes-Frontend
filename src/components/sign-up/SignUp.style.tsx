@@ -76,7 +76,7 @@ export const SignUpHeader = styled.div`
     font-weight: 600;
     font-size: 16px;
     line-height: 19px;
-    color: red;
+    color: #e59967;;
   }
 
   h5 {

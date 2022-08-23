@@ -38,19 +38,22 @@ export const Votes = styled.div`
   margin: auto 0;
 `;
 
-export const UpArrow = styled.div`
-  &:hover {
-    filter: drop-shadow(0px 5px 5px rgba(0, 0, 0, 0.5));
-  }
-`;
-
-export const DownArrow = styled.div`
+export const Arrow = styled.div`
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   &:hover {
     filter: drop-shadow(0px 5px 5px rgba(0, 0, 0, 0.5));
   }
 `;
 
 export const VotesValue = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 25px;
   height: 19px;
   font-family: "Raleway";
@@ -77,6 +80,10 @@ export const Quote = styled.div`
 `;
 
 export const QuoteText = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   font-family: "Raleway";
   font-style: normal;
   font-weight: 400;
@@ -84,7 +91,7 @@ export const QuoteText = styled.div`
   line-height: 19px;
 
   color: #000000;
-  
+
   @media (max-width: 900px) {
     max-width: 255px;
     min-height: 20px;
@@ -98,7 +105,7 @@ export const QuoteAuthor = styled.div`
   align-items: center;
   padding: 0px;
   gap: 10px;
-  
+
   @media (max-width: 900px) {
     max-width: 255px;
     min-height: 24px;
@@ -106,6 +113,10 @@ export const QuoteAuthor = styled.div`
 `;
 
 export const AuthorPicture = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   width: 24px;
   height: 24px;
   img {

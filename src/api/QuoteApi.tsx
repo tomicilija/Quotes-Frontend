@@ -20,12 +20,11 @@ interface UserRes {
 }
 
 export interface QuoteRes {
-  id: number;
-  quote: string;
+  //userId: number,
   karma: number;
-  createdAt: string;
-  updatedAt: string;
-  user: UserRes;
+  text: string;
+  name: string;
+  surname: string;
 }
 
 interface VoteCheckRes {
@@ -91,10 +90,21 @@ export const voteCheck = (id: number, token: string): Promise<VoteCheckRes> =>
 
 export const getList = (sort: string, page: number): Promise<QuoteRes[]> =>
   api
-    .get(`/list`, {
+    .get(`/likes`, {
       params: {
         sort,
-        page,
+        page, 
       },
     })
     .then((res) => res.data);
+
+    export const getRecent = (sort: string, page: number, token: string): Promise<QuoteRes[]> =>
+      api
+        .get(`/recent`, {
+          headers: { Authorization: `Bearer ${token}` },
+          params: {
+            sort,
+            page, 
+          },
+        })
+        .then((res) => res.data);
