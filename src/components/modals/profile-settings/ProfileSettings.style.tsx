@@ -13,16 +13,16 @@ export const Container = styled.div`
 
   margin-left: -10%;
 
-@media (max-width: 900px) {
-  width: 110%;
-  margin-left: -15%;
-}
+  @media (max-width: 900px) {
+    width: 110%;
+    margin-left: -13%;
+  }
 `;
 
 export const Wrapper = styled.div`
   position: relative;
   width: 600px;
-  height: 500px;
+  min-height: 500px;
   margin-top: 80vh;
 
   display: flex;
@@ -37,14 +37,16 @@ export const Wrapper = styled.div`
   z-index: 10;
   border-radius: 16px;
 
-@media (max-width: 900px) {
-  width: 80%;
-    height: 500px;
-  max-width: 350px;
-  margin-top: 50vh;
-  margin-left: auto;
-  margin-right: auto;
-}
+  form {
+    width: 100%;
+  }
+
+  @media (max-width: 900px) {
+    width: 80%;
+    height: auto;
+    max-width: auto;
+    margin: 60vh auto 0 auto;
+  }
 `;
 
 export const SettingsHeader = styled.div`
@@ -67,6 +69,17 @@ export const SettingsHeader = styled.div`
       color: #e59967;
     }
   }
+
+  h3 {
+    margin-top: 20px;
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #e59967;
+  }
+
   h5 {
     font-family: "Raleway";
     font-style: normal;
@@ -94,9 +107,24 @@ export const SettingsSection = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-content: center;
   align-items: flex-start;
   padding: 0px;
-  gap: 8px;
+  gap: 10px;
+
+  :nth-child(5) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    @media (max-width: 900px) {
+      flex-direction: column;
+      button:nth-child(2) {
+        width: 200px;
+        margin-top: 10px;
+      }
+    }
+  }
 
   label {
     display: flex;
@@ -156,6 +184,10 @@ export const SettingsSection = styled.div`
     color: #ffffff;
 
     cursor: pointer;
+
+    :nth-child(2) {
+      width: 220px;
+    }
   }
 
   p {
@@ -179,13 +211,13 @@ export const SettingsSection = styled.div`
   }
 `;
 
-
 export const TwoInRow = styled.div`
   position: relative;
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-content: center;
+  align-items: center;
   gap: 16px;
 `;

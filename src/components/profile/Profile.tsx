@@ -35,6 +35,8 @@ const Profile = () => {
   const [userVotes, setUserVotes] = useState([
     { karma: 0, text: "", name: "", surname: "" },
   ]);
+
+  const [userHasLikes, setUserHasLikes] = useState(false);
   const [showedQuotesDesktop, setShowedQuotesDesktop] = useState(9);
   const [showedQuotesMobile, setShowedQuotesMobile] = useState(4);
 
@@ -83,8 +85,14 @@ const Profile = () => {
         getUserVotes(userId, JSON.parse(isLoggedIn!))
           .then((res) => {
             console.log(res);
-            setUserVotes(res);
-            loaded = true;
+            if (res) {
+              setUserVotes(res);
+              setUserHasLikes(true);
+              loaded = true;
+            } else {
+              setUserHasLikes(false);
+              console.log("User has no likes of other posts!");
+            }
           })
           .catch((e) => {
             console.log("Error! Cant get users votes: " + e);
@@ -125,21 +133,35 @@ const Profile = () => {
                 karma={userKarma}
               />
             ) : (
-                <p>Are you feeling <span>inspired?</span> Press + icon to write a quote.</p>
+              <p>
+                Are you feeling <span>inspired?</span> Press + icon to write a
+                quote.
+              </p>
             )}
           </Quote>
           <Likes>
             <h3>Likes</h3>
-            {isDesktop ? (
+            {userHasLikes ? (
               <>
-                <CardGrid quotes={userVotes.slice(0, showedQuotesDesktop)} />
-                <SeeMore onClick={loadQuotesDesktop}>Load more</SeeMore>
+                {isDesktop ? (
+                  <>
+                    <CardGrid
+                      quotes={userVotes.slice(0, showedQuotesDesktop)}
+                    />
+                    <SeeMore onClick={loadQuotesDesktop}>Load more</SeeMore>
+                  </>
+                ) : (
+                  <>
+                    <CardGrid quotes={userVotes.slice(0, showedQuotesMobile)} />
+                    <SeeMore onClick={loadQuotesMobile}>Load more</SeeMore>
+                  </>
+                )}
               </>
             ) : (
-              <>
-                <CardGrid quotes={userVotes.slice(0, showedQuotesMobile)} />
-                <SeeMore onClick={loadQuotesMobile}>Load more</SeeMore>
-              </>
+              <p>
+                Do you like any quotes you see <span>here?</span> Show it by
+                upvoating the <span>quote.</span>
+              </p>
             )}
           </Likes>
         </>

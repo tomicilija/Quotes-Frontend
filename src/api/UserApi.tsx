@@ -4,9 +4,10 @@ const api = axios.create({ baseURL: "http://localhost:5000/" });
 
 interface Register {
   email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
+  pass: string;
+  passConfirm: string;
+  name: string;
+  surname: string;
 }
 
 interface Login {
@@ -54,14 +55,16 @@ export const getUser = (token: string): Promise<UserWithEmailRes> =>
     .get("/me", { headers: { Authorization: `Bearer ${token}` } })
     .then((res) => res.data);
 
-export const updatePassword = (
-  password: UpdatePassword,
-  token: string
-): Promise<UserRes> =>
+export const updateUser = (user: Register, token: string): Promise<void> =>
   api
-    .put("/me/update-password", password, {
+    .patch("/me/update-password", user, {
       headers: { Authorization: `Bearer ${token}` },
     })
+    .then((res) => res.data);
+
+export const deleteUser = (token: string): Promise<void> =>
+  api
+    .delete("/me", { headers: { Authorization: `Bearer ${token}` } })
     .then((res) => res.data);
 
 export const getUserVotes = (
@@ -80,7 +83,7 @@ export const getUserVotes = (
         console.log(res.data);
         return res.data;
       } else {
-        return "No votes";
+        return null;
       }
     })
     .catch((e) => {

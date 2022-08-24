@@ -106,7 +106,7 @@ const CreateQuote: FC<Props> = ({ isQuoteOpen, setIsQuoteOpen }) => {
                     <button type="submit">Submit</button>
                     <p onClick={() => setIsQuoteOpen(false)}>Cancel</p>
                   </TwoInRow>
-                  <button onClick={deleteQuote}>Delete</button>
+                  <button onClick={deleteQuote}>Delete Quote</button>
                 </SettingsSection>
               </SettingsForm>
             </form>

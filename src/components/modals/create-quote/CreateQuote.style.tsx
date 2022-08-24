@@ -45,7 +45,7 @@ export const Wrapper = styled.div`
     width: 80%;
     height: auto;
     max-width: auto;
-    margin: 80vh auto 0 auto;
+    margin: 60vh auto 0 auto;
   }
 `;
 
@@ -157,6 +157,10 @@ export const SettingsSection = styled.div`
     color: #ffffff;
 
     cursor: pointer;
+
+    :nth-child(2) {
+      width: 220px;
+    }
   }
 
   p {
@@ -178,13 +182,12 @@ export const SettingsSection = styled.div`
 
     cursor: pointer;
   }
-  
+
   @media (max-width: 900px) {
     flex-direction: column;
-    button:nth-child(2){
+    button:nth-child(2) {
       margin-top: 0px;
     }
-    
   }
 `;
 

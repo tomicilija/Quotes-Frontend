@@ -10,7 +10,14 @@ import {
 } from "./SignUp.style";
 import { useState, useEffect } from "react";
 
-import { BrowserRouter, Link, Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Link,
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import { ReactComponent as Backgroundimg } from "../../assets/background/vectorQuotations.svg";
 import { ReactComponent as DefaultProfilePicture } from "../../assets/DefaultProfilePicture.svg";
 
@@ -77,9 +84,7 @@ const SignUp = () => {
             What is your <span>name?</span>
           </h1>
           <h5>Your name will appear on quotes and your public profle.</h5>
-          <h3>
-            {ErrorMessage}
-          </h3>
+          <h3>{ErrorMessage}</h3>
         </SignUpHeader>
         <DefaultProfilePicture />
         <form onSubmit={handleSubmit}>
