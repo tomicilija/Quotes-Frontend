@@ -37,19 +37,27 @@ export const getMyQuote = (token: string): Promise<MyQuoteRes> =>
     .get("/myquote", { headers: { Authorization: `Bearer ${token}` } })
     .then((res) => res.data);
 
-export const postMyQuote = (quote: Quote, token: string): Promise<MyQuoteRes> =>
+export const postMyQuote = (text: string, token: string): Promise<void> =>
   api
-    .post("/myquote", quote, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    .post(
+      "/myquote",
+      { text: text },
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
     .then((res) => res.data);
 
-export const updateMyQuote = (
-  quote: Quote,
-  token: string
-): Promise<MyQuoteRes> =>
+export const updateMyQuote = (text: string, token: string): Promise<void> =>
   api
-    .put("/myquote", quote, { headers: { Authorization: `Bearer ${token}` } })
+    .patch(
+      "/myquote",
+      { text: text },
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+    .then((res) => res.data);
+
+export const deleteMyQuote = (token: string): Promise<void> =>
+  api
+    .delete("/myquote", { headers: { Authorization: `Bearer ${token}` } })
     .then((res) => res.data);
 
 export const upvoteUser = (id: number, token: string): Promise<QuoteRes> =>
@@ -88,23 +96,12 @@ export const voteCheck = (id: number, token: string): Promise<VoteCheckRes> =>
     })
     .then((res) => res.data);
 
-export const getList = (sort: string, page: number): Promise<QuoteRes[]> =>
+export const getList = (): Promise<QuoteRes[]> =>
+  api.get(`/likes`, {}).then((res) => res.data);
+
+export const getRecent = (token: string): Promise<QuoteRes[]> =>
   api
-    .get(`/likes`, {
-      params: {
-        sort,
-        page, 
-      },
+    .get(`/recent`, {
+      headers: { Authorization: `Bearer ${token}` },
     })
     .then((res) => res.data);
-
-    export const getRecent = (sort: string, page: number, token: string): Promise<QuoteRes[]> =>
-      api
-        .get(`/recent`, {
-          headers: { Authorization: `Bearer ${token}` },
-          params: {
-            sort,
-            page, 
-          },
-        })
-        .then((res) => res.data);

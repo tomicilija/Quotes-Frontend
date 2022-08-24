@@ -15,14 +15,14 @@ export const Container = styled.div`
 
   @media (max-width: 900px) {
     width: 110%;
-    margin-left: -15%;
+    margin-left: -13%;
   }
 `;
 
 export const Wrapper = styled.div`
   position: relative;
   width: 600px;
-  height: 400px;
+  min-height: 400px;
   margin-top: 80vh;
 
   display: flex;
@@ -37,13 +37,15 @@ export const Wrapper = styled.div`
   z-index: 10;
   border-radius: 16px;
 
+  form {
+    width: 100%;
+  }
+
   @media (max-width: 900px) {
     width: 80%;
-    height: 450px;
-    max-width: 350px;
-    margin-top: 60vh;
-    margin-left: auto;
-    margin-right: auto;
+    height: auto;
+    max-width: auto;
+    margin: 80vh auto 0 auto;
   }
 `;
 
@@ -67,6 +69,17 @@ export const SettingsHeader = styled.div`
       color: #e59967;
     }
   }
+
+  h3 {
+    margin-top: 20px;
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #e59967;
+  }
+
   h5 {
     font-family: "Raleway";
     font-style: normal;
@@ -92,8 +105,8 @@ export const SettingsSection = styled.div`
   position: relative;
   width: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: flex-start;
   padding: 0px;
   gap: 20px;
@@ -164,6 +177,14 @@ export const SettingsSection = styled.div`
     color: #322d38;
 
     cursor: pointer;
+  }
+  
+  @media (max-width: 900px) {
+    flex-direction: column;
+    button:nth-child(2){
+      margin-top: 0px;
+    }
+    
   }
 `;
 

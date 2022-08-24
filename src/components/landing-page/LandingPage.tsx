@@ -97,7 +97,7 @@ const LandingPage = () => {
   useEffect(() => {
     // Fix so we dont need if
     if (!loaded2) {
-      getList("karma", 1).then((quotes) => {
+      getList().then((quotes) => {
         console.log(quotes);
         setMostLikedQuotes(quotes);
         setRandomQuote(quotes[Math.floor(Math.random() * quotes.length)]);
@@ -123,7 +123,7 @@ const LandingPage = () => {
 
       // Fix so we dont need if
       if (userId && !loaded) {
-        getRecent("karma", 1, JSON.parse(isLoggedIn!)).then((quotes) => {
+        getRecent(JSON.parse(isLoggedIn!)).then((quotes) => {
           console.log(quotes);
           setRecentQuotes(quotes);
           loaded = true;

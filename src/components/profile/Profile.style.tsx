@@ -169,6 +169,13 @@ export const Quote = styled.div`
   line-height: 28px;
 
   color: #de8667;
+  p {
+    font-size: 15px;
+    color: black;
+  }
+  span {
+    color: #de8667;
+  }
 
   @media (max-width: 900px) {
   }

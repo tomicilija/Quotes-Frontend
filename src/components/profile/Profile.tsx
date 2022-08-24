@@ -117,12 +117,16 @@ const Profile = () => {
           </ProfileBanner>
           <Quote>
             Quote
-            <Card
-              quote={userQquote}
-              firstName={firstName}
-              lastName={lastName}
-              karma={userKarma}
-            />
+            {userQquote ? (
+              <Card
+                quote={userQquote}
+                firstName={firstName}
+                lastName={lastName}
+                karma={userKarma}
+              />
+            ) : (
+                <p>Are you feeling <span>inspired?</span> Press + icon to write a quote.</p>
+            )}
           </Quote>
           <Likes>
             <h3>Likes</h3>
