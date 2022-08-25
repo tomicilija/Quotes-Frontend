@@ -35,7 +35,7 @@ let loaded = false;
 let loaded2 = false;
 
 export interface QuoteRes {
-  //userId: number,
+  userid: string;
   karma: number;
   text: string;
   name: string;
@@ -45,7 +45,7 @@ export interface QuoteRes {
 const LandingPage = () => {
   const isLoggedIn = localStorage.getItem("accessToken");
 
-  const [userId, setUserId] = useState("");
+  const [userid, setUserId] = useState("");
 
   const [mostLikedQuotes, setMostLikedQuotes] = useState<QuoteRes[]>([]);
   const [recentQuotes, setRecentQuotes] = useState<QuoteRes[]>([]);
@@ -54,24 +54,28 @@ const LandingPage = () => {
   const [showedLikedQuotesMobile, setShowedLikedQuotesMobile] = useState(4);
   const [showedRecentQuotesMobile, setShowedRecentQuotesMobile] = useState(4);
   const [randomQuote, setRandomQuote] = useState<QuoteRes>({
+    userid: "",
     karma: 0,
     text: "",
     name: "",
     surname: "",
   });
   const [heroQuote1, setHeroQuote1] = useState<QuoteRes>({
+    userid: "",
     karma: 0,
     text: "",
     name: "",
     surname: "",
   });
   const [heroQuote2, setHeroQuote2] = useState<QuoteRes>({
+    userid: "",
     karma: 0,
     text: "",
     name: "",
     surname: "",
   });
   const [heroQuote3, setHeroQuote3] = useState<QuoteRes>({
+    userid: "",
     karma: 0,
     text: "",
     name: "",
@@ -98,15 +102,15 @@ const LandingPage = () => {
     // Fix so we dont need if
     if (!loaded2) {
       getList().then((quotes) => {
-        console.log(quotes);
         setMostLikedQuotes(quotes);
-        setRandomQuote(quotes[Math.floor(Math.random() * quotes.length)]);
         setHeroQuote1(quotes[0]);
         setHeroQuote2(quotes[1]);
         setHeroQuote3(quotes[2]);
+        setRandomQuote(quotes[Math.floor(Math.random() * quotes.length)]);
         loaded2 = true;
       });
     }
+
     if (isLoggedIn) {
       getUser(JSON.parse(isLoggedIn!))
         .then(({ name, surname, id }) => {
@@ -122,9 +126,8 @@ const LandingPage = () => {
         });
 
       // Fix so we dont need if
-      if (userId && !loaded) {
+      if (userid && !loaded) {
         getRecent(JSON.parse(isLoggedIn!)).then((quotes) => {
-          console.log(quotes);
           setRecentQuotes(quotes);
           loaded = true;
         });
@@ -159,6 +162,7 @@ const LandingPage = () => {
             Quote of the day
             <span>Quote of the day is randomly choosen quote.</span>
             <Card
+              userid={randomQuote.userid}
               quote={randomQuote.text}
               firstName={randomQuote.name}
               lastName={randomQuote.surname}
@@ -232,6 +236,7 @@ const LandingPage = () => {
             <FeturedQuotes>
               <FeturedTop>
                 <Card
+                  userid={heroQuote2.userid}
                   quote={heroQuote2.text}
                   firstName={heroQuote2.name}
                   lastName={heroQuote2.surname}
@@ -240,6 +245,7 @@ const LandingPage = () => {
               </FeturedTop>
               <FeturedMid>
                 <Card
+                  userid={heroQuote1.userid}
                   quote={heroQuote1.text}
                   firstName={heroQuote1.name}
                   lastName={heroQuote1.surname}
@@ -248,6 +254,7 @@ const LandingPage = () => {
               </FeturedMid>
               <FeturedBottom>
                 <Card
+                  userid={heroQuote3.userid}
                   quote={heroQuote3.text}
                   firstName={heroQuote3.name}
                   lastName={heroQuote3.surname}

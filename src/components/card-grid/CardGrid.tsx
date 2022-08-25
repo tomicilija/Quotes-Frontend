@@ -5,15 +5,9 @@ import { useState, useEffect } from "react";
 import { getUser } from "../../api/UserApi";
 import { getMyQuote } from "../../api/QuoteApi";
 
-const breakpointColumnsObj = {
-  default: 3,
-  1340: 2,
-  900: 1,
-};
-
 interface QuotesGridProps {
   quotes: {
-    //userId: number,
+    userid: string;
     karma: number;
     text: string;
     name: string;
@@ -22,6 +16,21 @@ interface QuotesGridProps {
 }
 
 const CardGrid: React.FC<QuotesGridProps> = ({ quotes }) => {
+  let breakpointColumnsObj;
+  if (quotes.length < 3) {
+    breakpointColumnsObj = {
+      default: quotes.length,
+      1340: quotes.length,
+      900: 1,
+    };
+  } else {
+    breakpointColumnsObj = {
+      default: 3,
+      1340: 2,
+      900: 1,
+    };
+  }
+
   if (quotes) {
     return (
       <CardWrapper>
@@ -31,6 +40,7 @@ const CardGrid: React.FC<QuotesGridProps> = ({ quotes }) => {
         >
           {quotes.map((value) => (
             <Card
+              userid={value.userid}
               quote={value.text}
               firstName={value.name}
               lastName={value.surname}
@@ -42,7 +52,12 @@ const CardGrid: React.FC<QuotesGridProps> = ({ quotes }) => {
     );
   } else {
     /* If no quotes exist */
-    return <NotFound> <h1>OOPS!</h1> <p>This is looking a little empty</p></NotFound>;
+    return (
+      <NotFound>
+        {" "}
+        <h1>OOPS!</h1> <p>This is looking a little empty</p>
+      </NotFound>
+    );
   }
 };
 

@@ -33,7 +33,7 @@ interface UserWithEmailRes {
 }
 /*interface QuoteRes {
   quotes: {
-    //userId: number,
+    //userid: string,
     karma: number;
     text: string;
     name: string;
@@ -70,8 +70,7 @@ export const deleteUser = (token: string): Promise<void> =>
 export const getUserVotes = (
   id: string,
   token: string
-): Promise<[{ karma: 0; text: ""; name: ""; surname: "" }]> => {
-  console.log(id);
+): Promise<[{ userid: ""; karma: 0; text: ""; name: ""; surname: "" }]> => {
   return api
     .get(`/user/${id}`, {
       headers: {
@@ -80,7 +79,6 @@ export const getUserVotes = (
     })
     .then((res) => {
       if (res.data.length > 0) {
-        console.log(res.data);
         return res.data;
       } else {
         return null;

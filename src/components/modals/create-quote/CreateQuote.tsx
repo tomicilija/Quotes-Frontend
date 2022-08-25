@@ -25,14 +25,14 @@ interface Props {
 const CreateQuote: FC<Props> = ({ isQuoteOpen, setIsQuoteOpen }) => {
   const isLoggedIn = localStorage.getItem("accessToken");
 
-  const [userQquote, setUserQquote] = useState("");
-  const [newUserQquote, setNewUserQquote] = useState("");
+  const [userQuote, setUserQuote] = useState("");
+  const [newUserQuote, setNewUserQuote] = useState("");
   const [isNew, setIsNew] = useState(false);
   const [ErrorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     getMyQuote(JSON.parse(isLoggedIn!))
-      .then(({ text }) => setUserQquote(text))
+      .then(({ text }) => setUserQuote(text))
       .catch((error: AxiosError) => {
         if (error.response?.status === 404) setIsNew(true);
       });
@@ -42,7 +42,7 @@ const CreateQuote: FC<Props> = ({ isQuoteOpen, setIsQuoteOpen }) => {
     e.preventDefault();
 
     if (isNew) {
-      postMyQuote(newUserQquote, JSON.parse(isLoggedIn!))
+      postMyQuote(newUserQuote, JSON.parse(isLoggedIn!))
         .then(() => {
           setIsQuoteOpen(false);
         })
@@ -51,7 +51,7 @@ const CreateQuote: FC<Props> = ({ isQuoteOpen, setIsQuoteOpen }) => {
           setErrorMessage(err.message);
         });
     } else {
-      updateMyQuote(newUserQquote, JSON.parse(isLoggedIn!))
+      updateMyQuote(newUserQuote, JSON.parse(isLoggedIn!))
         .then(() => {
           setIsQuoteOpen(false);
         })
@@ -94,11 +94,11 @@ const CreateQuote: FC<Props> = ({ isQuoteOpen, setIsQuoteOpen }) => {
                 <SettingsSection>
                   <textarea
                     id="quote"
-                    placeholder={userQquote}
-                    value={newUserQquote}
+                    placeholder={userQuote}
+                    value={newUserQuote}
                     maxLength={350}
                     required
-                    onChange={(e) => setNewUserQquote(e.target.value)}
+                    onChange={(e) => setNewUserQuote(e.target.value)}
                   />
                 </SettingsSection>
                 <SettingsSection>

@@ -11,42 +11,171 @@ import {
 } from "./Card.style";
 
 /* Background Image */
-import { ReactComponent as Upvote } from "../../assets/arrows/UpVote.svg";
-import { ReactComponent as DownVote } from "../../assets/arrows/DownVote.svg";
+import { ReactComponent as UpvoteBlack } from "../../assets/arrows/UpVoteBlack.svg";
+import { ReactComponent as DownVoteBlack } from "../../assets/arrows/DownVoteBlack.svg";
+import { ReactComponent as UpvoteOrange } from "../../assets/arrows/UpVoteOrange.svg";
+import { ReactComponent as DownVoteOrange } from "../../assets/arrows/DownVoteOrange.svg";
 
 /* Profile Image Todo */
 import { ReactComponent as ProfilePicture } from "./Location/image.svg";
+import {
+  deleteDownvote,
+  deleteUpvote,
+  downvoteUser,
+  getMyQuote,
+  getUsersQuote,
+  upvoteUser,
+  voteCheck,
+} from "../../api/QuoteApi";
+import { useEffect, useState } from "react";
 
 interface VoteCardProps {
-  //userId: number;
+  userid: string;
   karma: number;
   quote: string;
   firstName: string;
   lastName: string;
 }
-const Card: React.FC<VoteCardProps>  = ({
-  //userId,
+
+const Card: React.FC<VoteCardProps> = ({
+  userid,
   karma,
   quote,
   firstName,
   lastName,
 }) => {
+  const isLoggedIn = localStorage.getItem("accessToken");
+  const [quoteStatus, setQuoteStatus] = useState("");
+  const [userKarma, setUserKarma] = useState(0);
+  
+  useEffect(() => {
+    setUserKarma(karma);
+  }, [karma]);
+
+  useEffect(() => {
+    voteCheck(userid, JSON.parse(isLoggedIn!))
+      .then((text) => setQuoteStatus(text))
+      .catch((e) => {
+        console.log("Error: Cant get state" + e);
+      });
+  });
+
+  const handleUpvote = async () => {
+    if (quoteStatus === "NEUTRAL") {
+      upvoteUser(userid, JSON.parse(isLoggedIn!))
+        .then(() => {
+          getUsersQuote(userid)
+            .then((quote) => {
+              setUserKarma(quote.karma);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } else if (quoteStatus === "DOWNVOTE") {
+      deleteDownvote(userid, JSON.parse(isLoggedIn!))
+        .then(() => {
+          getUsersQuote(userid)
+            .then((quote) => {
+              setUserKarma(quote.karma);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      upvoteUser(userid, JSON.parse(isLoggedIn!))
+        .then(() => {
+          getUsersQuote(userid)
+            .then((quote) => {
+              setUserKarma(quote.karma);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } else if (quoteStatus === "UPVOTE") {
+      alert("You cannot upvote one quote twice!");
+    }
+  };
+
+  const handleDownvote = async () => {
+    if (quoteStatus === "NEUTRAL") {
+      downvoteUser(userid, JSON.parse(isLoggedIn!))
+        .then(() => {
+          getUsersQuote(userid)
+            .then((quote) => {
+              setUserKarma(quote.karma);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } else if (quoteStatus === "UPVOTE") {
+      downvoteUser(userid, JSON.parse(isLoggedIn!))
+        .then(() => {
+          getUsersQuote(userid)
+            .then((quote) => {
+              setUserKarma(quote.karma);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      deleteUpvote(userid, JSON.parse(isLoggedIn!))
+        .then(() => {
+          getUsersQuote(userid)
+            .then((quote) => {
+              setUserKarma(quote.karma);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } else if (quoteStatus === "DOWNVOTE") {
+      alert("You cannot downvote one quote twice!");
+    }
+  };
+
   return (
     <Container>
       <Votes>
-        <Arrow>
-          <Upvote />
+        <Arrow onClick={() => handleUpvote()}>
+                {quoteStatus === "UPVOTE" ? (
+                  <UpvoteOrange />
+                ) :  (
+                  <UpvoteBlack />
+                )}
         </Arrow>
-        <VotesValue>{karma}</VotesValue>
-        <Arrow>
-          <DownVote />
+        <VotesValue>{userKarma}</VotesValue>
+        <Arrow onClick={() => handleDownvote()}>
+                {quoteStatus === "DOWNVOTE" ? (
+                  <DownVoteOrange />
+                ) :  (
+                  <DownVoteBlack />
+                )}
         </Arrow>
       </Votes>
       <Quote>
         <QuoteText>
-          <p>
-            {quote} 
-          </p>
+          <p>{quote}</p>
         </QuoteText>
         <QuoteAuthor>
           <AuthorPicture>
@@ -54,7 +183,9 @@ const Card: React.FC<VoteCardProps>  = ({
             <img src="https://picsum.photos/50/50" alt="avatar" />
           </AuthorPicture>
           <AuthorName>
-            <p>{firstName} {lastName}</p>
+            <p>
+              {firstName} {lastName}
+            </p>
           </AuthorName>
         </QuoteAuthor>
       </Quote>

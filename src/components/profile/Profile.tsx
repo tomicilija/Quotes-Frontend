@@ -27,13 +27,13 @@ let loaded = false;
 const Profile = () => {
   const isLoggedIn = localStorage.getItem("accessToken");
 
-  const [userId, setUserId] = useState("");
+  const [userid, setUserId] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userQquote, setUserQquote] = useState("");
   const [userKarma, setUserKarma] = useState(0);
   const [userVotes, setUserVotes] = useState([
-    { karma: 0, text: "", name: "", surname: "" },
+    { userid: "", karma: 0, text: "", name: "", surname: "" },
   ]);
 
   const [userHasLikes, setUserHasLikes] = useState(false);
@@ -81,10 +81,9 @@ const Profile = () => {
           console.log("Error! Cant get users quote: " + e);
         });
 
-      if (userId && !loaded) {
-        getUserVotes(userId, JSON.parse(isLoggedIn!))
+      if (userid && !loaded) {
+        getUserVotes(userid, JSON.parse(isLoggedIn!))
           .then((res) => {
-            console.log(res);
             if (res) {
               setUserVotes(res);
               setUserHasLikes(true);
@@ -127,6 +126,7 @@ const Profile = () => {
             Quote
             {userQquote ? (
               <Card
+                userid={userid}
                 quote={userQquote}
                 firstName={firstName}
                 lastName={lastName}

@@ -84,7 +84,7 @@ const Navbar = () => {
           </AddMobile>
           <Menu className={isBurgerOpen ? "showMenuNav" : "hideMenuNav"}>
             <ButtonWrapper>
-              <Link to="/" style={{ textDecoration: "none" }}>
+              <Link to="/profile" style={{ textDecoration: "none" }}>
                 <MobileLink>
                   <DefaultProfileIcon />
                   <p>John Scott</p>

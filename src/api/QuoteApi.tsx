@@ -7,7 +7,7 @@ interface Quote {
 }
 
 interface MyQuoteRes {
-  id: string;
+  userid: string;
   text: string;
   karma: number;
   creation_date: string;
@@ -20,7 +20,7 @@ interface UserRes {
 }
 
 export interface QuoteRes {
-  //userId: number,
+  userid: string;
   karma: number;
   text: string;
   name: string;
@@ -28,7 +28,7 @@ export interface QuoteRes {
 }
 
 interface VoteCheckRes {
-  userId: number;
+  userid: number;
   vote: number;
 }
 
@@ -36,6 +36,9 @@ export const getMyQuote = (token: string): Promise<MyQuoteRes> =>
   api
     .get("/myquote", { headers: { Authorization: `Bearer ${token}` } })
     .then((res) => res.data);
+
+export const getUsersQuote = (id: string): Promise<MyQuoteRes> =>
+  api.get(`/quote/${id}`, {}).then((res) => res.data);
 
 export const postMyQuote = (text: string, token: string): Promise<void> =>
   api
@@ -60,9 +63,16 @@ export const deleteMyQuote = (token: string): Promise<void> =>
     .delete("/myquote", { headers: { Authorization: `Bearer ${token}` } })
     .then((res) => res.data);
 
-export const upvoteUser = (id: number, token: string): Promise<QuoteRes> =>
+export const voteCheck = (id: string, token: string): Promise<string> =>
   api
-    .put(
+    .get(`/user/${id}/vote`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((res) => res.data);
+
+export const upvoteUser = (id: string, token: string): Promise<void> =>
+  api
+    .post(
       `/user/${id}/upvote`,
       {},
       {
@@ -71,9 +81,9 @@ export const upvoteUser = (id: number, token: string): Promise<QuoteRes> =>
     )
     .then((res) => res.data);
 
-export const downvoteUser = (id: number, token: string): Promise<QuoteRes> =>
+export const downvoteUser = (id: string, token: string): Promise<void> =>
   api
-    .put(
+    .post(
       `/user/${id}/downvote`,
       {},
       {
@@ -82,16 +92,16 @@ export const downvoteUser = (id: number, token: string): Promise<QuoteRes> =>
     )
     .then((res) => res.data);
 
-export const deleteVote = (id: number, token: string): Promise<QuoteRes> =>
+export const deleteUpvote = (id: string, token: string): Promise<void> =>
   api
-    .delete(`/user/${id}/vote`, {
+    .delete(`/user/${id}/upvote`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((res) => res.data);
 
-export const voteCheck = (id: number, token: string): Promise<VoteCheckRes> =>
+export const deleteDownvote = (id: string, token: string): Promise<void> =>
   api
-    .get(`/user/${id}/vote`, {
+    .delete(`/user/${id}/downvote`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((res) => res.data);

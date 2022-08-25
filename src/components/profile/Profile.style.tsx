@@ -206,6 +206,7 @@ export const Likes = styled.div`
     color: #de8667;
   }
   @media (max-width: 900px) {
+    padding: 0 0 0 10px;
   }
 `;
 
