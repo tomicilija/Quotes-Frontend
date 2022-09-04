@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Container,
   BgTop,
@@ -21,18 +21,16 @@ import {
 } from "./LandingPage.style";
 import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
 
-import Card from "../card/Card";
+import Card from "../../components/card/Card";
 import { getUser, getUserVotes } from "../../api/UserApi";
 import { getList, getMyQuote, getRecent } from "../../api/QuoteApi";
-import CardGrid from "../card-grid/CardGrid";
+import CardGrid from "../../components/card-grid/CardGrid";
 
 /* Background Images */
 import { ReactComponent as BackgroundTop } from "../../assets/background/vectorTop.svg";
 import { ReactComponent as BackgroundMid } from "../../assets/background/vectorMid.svg";
 import { ReactComponent as BackgroundLow } from "../../assets/background/vectorLow.svg";
-
-let loaded = false;
-let loaded2 = false;
+import { UpdateContext } from "../../utils/UpdateContext";
 
 export interface QuoteRes {
   userid: string;
@@ -82,6 +80,8 @@ const LandingPage = () => {
     surname: "",
   });
 
+  const { updated } = useContext(UpdateContext);
+
   const loadLikedQuotesDesktop = () => {
     setShowedLikedQuotesDesktop((prevValue) => prevValue + 9);
   };
@@ -99,41 +99,20 @@ const LandingPage = () => {
   };
 
   useEffect(() => {
-    // Fix so we dont need if
-    if (!loaded2) {
-      getList().then((quotes) => {
-        setMostLikedQuotes(quotes);
-        setHeroQuote1(quotes[0]);
-        setHeroQuote2(quotes[1]);
-        setHeroQuote3(quotes[2]);
-        setRandomQuote(quotes[Math.floor(Math.random() * quotes.length)]);
-        loaded2 = true;
-      });
-    }
+    getList().then((quotes) => {
+      setMostLikedQuotes(quotes);
+      setHeroQuote1(quotes[0]);
+      setHeroQuote2(quotes[1]);
+      setHeroQuote3(quotes[2]);
+      setRandomQuote(quotes[Math.floor(Math.random() * quotes.length)]);
+    });
 
     if (isLoggedIn) {
-      getUser(JSON.parse(isLoggedIn!))
-        .then(({ name, surname, id }) => {
-          //setFirstName(name);
-          //setLastName(surname);
-          setUserId(id);
-          //console.log(name);
-        })
-        .catch((e) => {
-          console.log("Error: Cant get user" + e);
-          //isLoggedIn = null;
-          //localStorage.clear();
-        });
-
-      // Fix so we dont need if
-      if (userid && !loaded) {
-        getRecent(JSON.parse(isLoggedIn!)).then((quotes) => {
-          setRecentQuotes(quotes);
-          loaded = true;
-        });
-      }
+      getRecent(JSON.parse(isLoggedIn!)).then((quotes) => {
+        setRecentQuotes(quotes);
+      });
     }
-  });
+  }, [updated]);
 
   // Show only 4 cards on mobile & 9 on desktop
   const [isDesktop, setDesktop] = useState(window.innerWidth > 1340);

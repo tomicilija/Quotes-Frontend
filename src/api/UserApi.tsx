@@ -12,7 +12,7 @@ interface Register {
 
 interface Login {
   email: string;
-  password: string;
+  pass: string;
 }
 
 interface UpdatePassword {
@@ -41,13 +41,13 @@ interface UserWithEmailRes {
   }[];
 }*/
 interface LoginRes {
-  access_token: string;
+  accessToken: string;
 }
 
-export const register = (user: Register): Promise<UserWithEmailRes> =>
-  api.post("/register", user).then((res) => res.data);
+export const signUp = (user: Register): Promise<string> =>
+  api.post("/signup", user).then((res) => res.data);
 
-export const login = (user: Login): Promise<LoginRes> =>
+export const signIn = (user: Login): Promise<LoginRes> =>
   api.post("/login", user).then((res) => res.data);
 
 export const getUser = (token: string): Promise<UserWithEmailRes> =>

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import {
   Container,
   Wrapper,
@@ -16,6 +16,7 @@ import {
   updateMyQuote,
 } from "../../../api/QuoteApi";
 import { AxiosError } from "axios";
+import { UpdateContext, } from "../../../utils/UpdateContext";
 
 interface Props {
   isQuoteOpen: boolean;
@@ -29,6 +30,8 @@ const CreateQuote: FC<Props> = ({ isQuoteOpen, setIsQuoteOpen }) => {
   const [newUserQuote, setNewUserQuote] = useState("");
   const [isNew, setIsNew] = useState(false);
   const [ErrorMessage, setErrorMessage] = useState("");
+  
+  const {updated, setUpdated} = useContext(UpdateContext);
 
   useEffect(() => {
     getMyQuote(JSON.parse(isLoggedIn!))
@@ -36,14 +39,15 @@ const CreateQuote: FC<Props> = ({ isQuoteOpen, setIsQuoteOpen }) => {
       .catch((error: AxiosError) => {
         if (error.response?.status === 404) setIsNew(true);
       });
-  });
+  }, []);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-
+    // To prevent refreshing page  --> Fix so it works without page reload
+    e.preventDefault(); 
     if (isNew) {
       postMyQuote(newUserQuote, JSON.parse(isLoggedIn!))
         .then(() => {
+          setUpdated(!updated)
           setIsQuoteOpen(false);
         })
         .catch((err) => {
@@ -53,7 +57,8 @@ const CreateQuote: FC<Props> = ({ isQuoteOpen, setIsQuoteOpen }) => {
     } else {
       updateMyQuote(newUserQuote, JSON.parse(isLoggedIn!))
         .then(() => {
-          setIsQuoteOpen(false);
+          setUpdated(!updated)
+          setIsQuoteOpen(false); 
         })
         .catch((err) => {
           console.log(err);

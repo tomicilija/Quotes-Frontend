@@ -45,7 +45,14 @@ export const Wrapper = styled.div`
     width: 80%;
     height: auto;
     max-width: auto;
-    margin: 60vh auto 0 auto;
+    margin: 80vh auto 0 auto;
+  }
+
+  @media (max-width: 300px) {
+    width: 90%;
+    height: auto;
+    max-width: auto;
+    margin: 80vh 0 0 -20px;
   }
 `;
 

@@ -20,6 +20,7 @@ import {
 } from "react-router-dom";
 import { ReactComponent as Backgroundimg } from "../../assets/background/vectorQuotations.svg";
 import { ReactComponent as DefaultProfilePicture } from "../../assets/DefaultProfilePicture.svg";
+import { signUp } from "../../api/UserApi";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -34,6 +35,7 @@ const SignUp = () => {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+/*
     const signUpUrl = "http://localhost:5000/signup";
     setErrorMessage("");
     const signUpData = {
@@ -51,25 +53,21 @@ const SignUp = () => {
       },
       body: JSON.stringify(signUpData),
     })
-      .then((res) => {
-        if (!res.ok) {
-          return res.text().then((text) => {
-            throw new Error(text);
-          });
-        } else {
+    */
+
+    signUp (
+      {
+        email: email,
+        pass: password,
+        passConfirm: passwordConfirm,
+        name: firstName,
+        surname: lastName,
+      })
+      .then(() => {
           return navigate("/login");
-        }
       })
       .catch((err) => {
-        const x = JSON.parse(err["message"]);
-        let message;
-        if (Array.isArray(x)) {
-          message = x["message" as any].filter(
-            (v: any, i: any, a: any) =>
-              a.findIndex((v2: any) => v2.id === v.id) === i
-          );
-        } else message = x["message"];
-        setErrorMessage(message);
+        setErrorMessage(err.response.data.message);
       });
   };
 

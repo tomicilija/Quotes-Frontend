@@ -1,5 +1,6 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import { deleteUser, getUser, updateUser } from "../../../api/UserApi";
+import { UpdateContext } from "../../../utils/UpdateContext";
 import {
   Container,
   Wrapper,
@@ -34,6 +35,8 @@ const ProfileSettings: FC<Props> = ({ isSettingsOpen, setIsSettingsOpen }) => {
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
 
   const [ErrorMessage, setErrorMessage] = useState("");
+  
+  const {updated, setUpdated} = useContext(UpdateContext);
 
   useEffect(() => {
     getUser(JSON.parse(isLoggedIn!))
@@ -48,7 +51,8 @@ const ProfileSettings: FC<Props> = ({ isSettingsOpen, setIsSettingsOpen }) => {
   });
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
+    // To prevent refreshing page  --> Fix so it works without page reload
+    e.preventDefault(); 
     updateUser(
       {
         email: newEmail,
@@ -60,6 +64,7 @@ const ProfileSettings: FC<Props> = ({ isSettingsOpen, setIsSettingsOpen }) => {
       JSON.parse(isLoggedIn!)
     )
       .then(() => {
+        setUpdated(!updated)
         setIsSettingsOpen(false);
       })
       .catch((err) => {

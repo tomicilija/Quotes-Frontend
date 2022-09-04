@@ -47,7 +47,7 @@ const Card: React.FC<VoteCardProps> = ({
   const isLoggedIn = localStorage.getItem("accessToken");
   const [quoteStatus, setQuoteStatus] = useState("");
   const [userKarma, setUserKarma] = useState(0);
-  
+
   useEffect(() => {
     setUserKarma(karma);
   }, [karma]);
@@ -78,18 +78,20 @@ const Card: React.FC<VoteCardProps> = ({
     } else if (quoteStatus === "DOWNVOTE") {
       deleteDownvote(userid, JSON.parse(isLoggedIn!))
         .then(() => {
-          getUsersQuote(userid)
-            .then((quote) => {
-              setUserKarma(quote.karma);
+          upvoteUser(userid, JSON.parse(isLoggedIn!))
+            .then(() => {
+              getUsersQuote(userid)
+                .then((quote) => {
+                  setUserKarma(quote.karma);
+                })
+                .catch((e) => {
+                  console.log(e);
+                });
             })
             .catch((e) => {
               console.log(e);
             });
         })
-        .catch((e) => {
-          console.log(e);
-        });
-      upvoteUser(userid, JSON.parse(isLoggedIn!))
         .then(() => {
           getUsersQuote(userid)
             .then((quote) => {
@@ -103,7 +105,19 @@ const Card: React.FC<VoteCardProps> = ({
           console.log(e);
         });
     } else if (quoteStatus === "UPVOTE") {
-      alert("You cannot upvote one quote twice!");
+      deleteUpvote(userid, JSON.parse(isLoggedIn!))
+        .then(() => {
+          getUsersQuote(userid)
+            .then((quote) => {
+              setUserKarma(quote.karma);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     }
   };
 
@@ -123,20 +137,22 @@ const Card: React.FC<VoteCardProps> = ({
           console.log(e);
         });
     } else if (quoteStatus === "UPVOTE") {
-      downvoteUser(userid, JSON.parse(isLoggedIn!))
+      deleteUpvote(userid, JSON.parse(isLoggedIn!))
         .then(() => {
-          getUsersQuote(userid)
-            .then((quote) => {
-              setUserKarma(quote.karma);
+          downvoteUser(userid, JSON.parse(isLoggedIn!))
+            .then(() => {
+              getUsersQuote(userid)
+                .then((quote) => {
+                  setUserKarma(quote.karma);
+                })
+                .catch((e) => {
+                  console.log(e);
+                });
             })
             .catch((e) => {
               console.log(e);
             });
         })
-        .catch((e) => {
-          console.log(e);
-        });
-      deleteUpvote(userid, JSON.parse(isLoggedIn!))
         .then(() => {
           getUsersQuote(userid)
             .then((quote) => {
@@ -150,7 +166,19 @@ const Card: React.FC<VoteCardProps> = ({
           console.log(e);
         });
     } else if (quoteStatus === "DOWNVOTE") {
-      alert("You cannot downvote one quote twice!");
+      deleteDownvote(userid, JSON.parse(isLoggedIn!))
+        .then(() => {
+          getUsersQuote(userid)
+            .then((quote) => {
+              setUserKarma(quote.karma);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     }
   };
 
@@ -158,19 +186,11 @@ const Card: React.FC<VoteCardProps> = ({
     <Container>
       <Votes>
         <Arrow onClick={() => handleUpvote()}>
-                {quoteStatus === "UPVOTE" ? (
-                  <UpvoteOrange />
-                ) :  (
-                  <UpvoteBlack />
-                )}
+          {quoteStatus === "UPVOTE" ? <UpvoteOrange /> : <UpvoteBlack />}
         </Arrow>
         <VotesValue>{userKarma}</VotesValue>
         <Arrow onClick={() => handleDownvote()}>
-                {quoteStatus === "DOWNVOTE" ? (
-                  <DownVoteOrange />
-                ) :  (
-                  <DownVoteBlack />
-                )}
+          {quoteStatus === "DOWNVOTE" ? <DownVoteOrange /> : <DownVoteBlack />}
         </Arrow>
       </Votes>
       <Quote>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Container,
   Background,
@@ -17,12 +17,12 @@ import {
 import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
 import { ReactComponent as DefaultProfileIcon } from "../../assets/icons/user-profile-svgrepo-com.svg";
 
-import Card from "../card/Card";
+import Card from "../../components/card/Card";
 import { getUser, getUserVotes } from "../../api/UserApi";
 import { getMyQuote } from "../../api/QuoteApi";
-import CardGrid from "../card-grid/CardGrid";
+import CardGrid from "../../components/card-grid/CardGrid";
+import { UpdateContext } from "../../utils/UpdateContext";
 
-let loaded = false;
 
 const Profile = () => {
   const isLoggedIn = localStorage.getItem("accessToken");
@@ -39,6 +39,8 @@ const Profile = () => {
   const [userHasLikes, setUserHasLikes] = useState(false);
   const [showedQuotesDesktop, setShowedQuotesDesktop] = useState(9);
   const [showedQuotesMobile, setShowedQuotesMobile] = useState(4);
+
+  const { updated } = useContext(UpdateContext);
 
   const loadQuotesDesktop = () => {
     setShowedQuotesDesktop((prevValue) => prevValue + 9);
@@ -58,6 +60,7 @@ const Profile = () => {
     return () => window.removeEventListener("resize", updateMedia);
   });
 
+
   useEffect(() => {
     if (isLoggedIn) {
       getUser(JSON.parse(isLoggedIn!))
@@ -68,8 +71,6 @@ const Profile = () => {
         })
         .catch((e) => {
           console.log("Error: Cant get user" + e);
-          //isLoggedIn = null;
-          //localStorage.clear();
         });
 
       getMyQuote(JSON.parse(isLoggedIn!))
@@ -81,13 +82,12 @@ const Profile = () => {
           console.log("Error! Cant get users quote: " + e);
         });
 
-      if (userid && !loaded) {
+      if (userid) {
         getUserVotes(userid, JSON.parse(isLoggedIn!))
           .then((res) => {
             if (res) {
               setUserVotes(res);
               setUserHasLikes(true);
-              loaded = true;
             } else {
               setUserHasLikes(false);
               console.log("User has no likes of other posts!");
@@ -98,7 +98,7 @@ const Profile = () => {
           });
       }
     }
-  });
+  }, [userid, updated, isLoggedIn]);
 
   return (
     <Container>

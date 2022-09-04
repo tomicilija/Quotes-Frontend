@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Container,
   Logo,
@@ -25,28 +25,41 @@ import { ReactComponent as DefaultProfileIcon1 } from "../../assets/icons/user-p
 import { ReactComponent as AddPicture } from "../../assets/icons/add.svg";
 import ProfileSettings from "../modals/profile-settings/ProfileSettings";
 import CreateQuote from "../modals/create-quote/CreateQuote";
+import { getUser } from "../../api/UserApi";
 
 const Navbar = () => {
   const isLoggedIn = localStorage.getItem("accessToken");
-
   let location = useLocation();
 
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   // burger menu state
   const [isBurgerOpen, setIsBurgerOpen] = useState<boolean>(false);
-
   // add quote state
   const [isQuoteOpen, setIsQuoteOpen] = useState<boolean>(false);
-
   // settings state
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
   const openQuoteModal = () => {
     setIsQuoteOpen((prev) => !prev);
   };
-
   const openSettingsModal = () => {
     setIsSettingsOpen((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      getUser(JSON.parse(isLoggedIn!))
+        .then(({ name, surname, id }) => {
+          setFirstName(name);
+          setLastName(surname);
+        })
+        .catch((e) => {
+          console.log("Error: Cant get user" + e);
+        });
+    }
+  });
+
   return (
     <Container>
       <BurgerMenu onClick={() => setIsBurgerOpen(!isBurgerOpen)}>
@@ -84,33 +97,45 @@ const Navbar = () => {
           </AddMobile>
           <Menu className={isBurgerOpen ? "showMenuNav" : "hideMenuNav"}>
             <ButtonWrapper>
-              <Link to="/profile" style={{ textDecoration: "none" }}>
+              <Link
+                to="/profile"
+                onClick={() => setIsBurgerOpen(!isBurgerOpen)}
+                style={{ textDecoration: "none" }}
+              >
                 <MobileLink>
                   <DefaultProfileIcon />
-                  <p>John Scott</p>
+                  <p>
+                    {firstName} {lastName}
+                  </p>
                 </MobileLink>
               </Link>
-              <Link to="/" style={{ textDecoration: "none" }}>
+              <Link
+                to="/"
+                onClick={() => setIsBurgerOpen(!isBurgerOpen)}
+                style={{ textDecoration: "none" }}
+              >
                 <MobileLink>
                   <p>Home</p>
                   <RightArrow />
                 </MobileLink>
               </Link>
+              <div onClick={() => setIsBurgerOpen(!isBurgerOpen)}>
                 <MobileLink onClick={openSettingsModal}>
                   <p>Settings</p>
                   <RightArrow />
                 </MobileLink>
-                <MobileLink
-                  onClick={() => {
-                    localStorage.clear();
-                    window.location.href = "/";
-                  }}
-                >
-                  <p>
-                    <span>Logout</span>
-                  </p>
-                  <RightArrowOrange />
-                </MobileLink>
+              </div>
+              <MobileLink
+                onClick={() => {
+                  localStorage.clear();
+                  window.location.href = "/";
+                }}
+              >
+                <p>
+                  <span>Logout</span>
+                </p>
+                <RightArrowOrange />
+              </MobileLink>
               <Link to="/" style={{ textDecoration: "none" }}>
                 <DesktopLink>
                   <p>Home</p>
