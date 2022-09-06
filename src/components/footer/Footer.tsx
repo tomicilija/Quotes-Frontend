@@ -1,6 +1,4 @@
 import { Container, Logo, Rights } from "./Footer.style";
-
-/* Logo Images */
 import { ReactComponent as LogoImage } from "../../assets/icons/logo-icon.svg";
 
 const Footer = () => {
@@ -9,7 +7,16 @@ const Footer = () => {
       <Logo>
         <LogoImage />
       </Logo>
-      <Rights>All Rights Reserved &nbsp;|&nbsp;&nbsp;<a href="https://www.skillupmentor.com" target="_blank"> skillupmentor.com </a></Rights>
+      <Rights>
+        All Rights Reserved &nbsp;|&nbsp;&nbsp;
+        <a
+          href="https://www.skillupmentor.com"
+          target="_blank"
+          rel="noreferrer"
+        >
+          skillupmentor.com
+        </a>
+      </Rights>
     </Container>
   );
 };

@@ -1,4 +1,4 @@
-import React, { FC, useContext } from "react";
+import { FC, useContext, useState, useEffect } from "react";
 import {
   Container,
   Wrapper,
@@ -7,8 +7,6 @@ import {
   SettingsSection,
   TwoInRow,
 } from "./CreateQuote.style";
-
-import { useState, useEffect } from "react";
 import {
   deleteMyQuote,
   getMyQuote,
@@ -16,54 +14,46 @@ import {
   updateMyQuote,
 } from "../../../api/QuoteApi";
 import { AxiosError } from "axios";
-import { UpdateContext, } from "../../../utils/UpdateContext";
+import { UpdateContext } from "../../../utils/UpdateContext";
+import { CreateQuoteProps } from "../../../interfaces/QuoteInterfaces";
 
-interface Props {
-  isQuoteOpen: boolean;
-  setIsQuoteOpen: (isQuoteOpen: boolean) => void;
-}
+// Adding, updating, and deleteing quote from loggedin user using modal, that overlays whole page
 
-const CreateQuote: FC<Props> = ({ isQuoteOpen, setIsQuoteOpen }) => {
+const CreateQuote: FC<CreateQuoteProps> = ({ isQuoteOpen, setIsQuoteOpen }) => {
   const isLoggedIn = localStorage.getItem("accessToken");
-
   const [userQuote, setUserQuote] = useState("");
   const [newUserQuote, setNewUserQuote] = useState("");
-  const [isNew, setIsNew] = useState(false);
-  const [ErrorMessage, setErrorMessage] = useState("");
-  
-  const {updated, setUpdated} = useContext(UpdateContext);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [quoteDoesExist, setQuoteDoesExist] = useState(false);
+  const { updated, setUpdated } = useContext(UpdateContext);
 
   useEffect(() => {
-    getMyQuote(JSON.parse(isLoggedIn!))
-      .then(({ text }) => setUserQuote(text))
-      .catch((error: AxiosError) => {
-        if (error.response?.status === 404) setIsNew(true);
-      });
-  }, []);
+    (async () => {
+      const response = await getMyQuote(JSON.parse(isLoggedIn!));
+      setUserQuote(response.text);
+    })().catch((error: AxiosError) => {
+      if (error.response?.status === 404) setQuoteDoesExist(true);
+    });
+  }, [isLoggedIn]);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
-    // To prevent refreshing page  --> Fix so it works without page reload
-    e.preventDefault(); 
-    if (isNew) {
-      postMyQuote(newUserQuote, JSON.parse(isLoggedIn!))
-        .then(() => {
-          setUpdated(!updated)
-          setIsQuoteOpen(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          setErrorMessage(err.message);
-        });
+    e.preventDefault(); // To prevent refreshing the page on form submit
+    if (quoteDoesExist) {
+      (async () => {
+        await postMyQuote(newUserQuote, JSON.parse(isLoggedIn!));
+        setUpdated(!updated);
+        setIsQuoteOpen(false);
+      })().catch((err) => {
+        setErrorMessage(err.response.data.message);
+      });
     } else {
-      updateMyQuote(newUserQuote, JSON.parse(isLoggedIn!))
-        .then(() => {
-          setUpdated(!updated)
-          setIsQuoteOpen(false); 
-        })
-        .catch((err) => {
-          console.log(err);
-          setErrorMessage(err.message);
-        });
+      (async () => {
+        await updateMyQuote(newUserQuote, JSON.parse(isLoggedIn!));
+        setUpdated(!updated);
+        setIsQuoteOpen(false);
+      })().catch((err) => {
+        setErrorMessage(err.response.data.message);
+      });
     }
   };
 
@@ -91,7 +81,7 @@ const CreateQuote: FC<Props> = ({ isQuoteOpen, setIsQuoteOpen }) => {
                 You can post one quote. You can alse delete the quote or edit in
                 this window.
               </h5>
-              <h3>{ErrorMessage}</h3>
+              <h3>{errorMessage}</h3>
             </SettingsHeader>
             {/* <DefaultProfilePicture /> */}
             <form onSubmit={handleSubmit}>

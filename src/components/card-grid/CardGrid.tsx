@@ -1,21 +1,11 @@
 import { CardWrapper, NotFound } from "./CardGrid.style";
 import Masonry from "react-masonry-css";
 import Card from "../card/Card";
-import { useState, useEffect } from "react";
-import { getUser } from "../../api/UserApi";
-import { getMyQuote } from "../../api/QuoteApi";
+import { GridProps } from "../../interfaces/QuoteInterfaces";
 
-interface QuotesGridProps {
-  quotes: {
-    userid: string;
-    karma: number;
-    text: string;
-    name: string;
-    surname: string;
-  }[];
-}
+// Recives array of quotes and arranges them into collumns
 
-const CardGrid: React.FC<QuotesGridProps> = ({ quotes }) => {
+const CardGrid: React.FC<GridProps> = ({ quotes }) => {
   let breakpointColumnsObj;
   if (quotes.length < 3) {
     breakpointColumnsObj = {
@@ -54,7 +44,6 @@ const CardGrid: React.FC<QuotesGridProps> = ({ quotes }) => {
     /* If no quotes exist */
     return (
       <NotFound>
-        {" "}
         <h1>OOPS!</h1> <p>This is looking a little empty</p>
       </NotFound>
     );

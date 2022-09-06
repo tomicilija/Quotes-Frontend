@@ -8,67 +8,35 @@ import {
   TwoInRow,
   SigninText,
 } from "./SignUp.style";
-import { useState, useEffect } from "react";
-
-import {
-  BrowserRouter,
-  Link,
-  Navigate,
-  Route,
-  Routes,
-  useNavigate,
-} from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { ReactComponent as Backgroundimg } from "../../assets/background/vectorQuotations.svg";
 import { ReactComponent as DefaultProfilePicture } from "../../assets/DefaultProfilePicture.svg";
 import { signUp } from "../../api/UserApi";
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-
-  const navigate = useNavigate();
-
   const [ErrorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-/*
-    const signUpUrl = "http://localhost:5000/signup";
-    setErrorMessage("");
-    const signUpData = {
-      email: email,
-      pass: password,
-      passConfirm: passwordConfirm,
-      name: firstName,
-      surname: lastName,
-    };
-
-    fetch(signUpUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(signUpData),
-    })
-    */
-
-    signUp (
-      {
+    e.preventDefault(); // To prevent refreshing the page on form submit
+    (async () => {
+      await signUp({
         email: email,
         pass: password,
         passConfirm: passwordConfirm,
         name: firstName,
         surname: lastName,
-      })
-      .then(() => {
-          return navigate("/login");
-      })
-      .catch((err) => {
-        setErrorMessage(err.response.data.message);
       });
+      return navigate("/login");
+    })().catch((err) => {
+      setErrorMessage(err.response.data.message);
+    });
   };
 
   return (

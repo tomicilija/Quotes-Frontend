@@ -1,5 +1,6 @@
-import React, { FC, useContext, useEffect, useState } from "react";
-import { deleteUser, getUser, updateUser } from "../../../api/UserApi";
+import { FC, useContext, useEffect, useState } from "react";
+import { deleteUser, getSignedInUser, signIn, updateUser } from "../../../api/UserApi";
+import { ProfileSettingsProps } from "../../../interfaces/QuoteInterfaces";
 import { UpdateContext } from "../../../utils/UpdateContext";
 import {
   Container,
@@ -10,21 +11,13 @@ import {
   TwoInRow,
 } from "./ProfileSettings.style";
 
-interface Register {
-  email: string;
-  pass: string;
-  passConfirm: string;
-  name: string;
-  surname: string;
-}
-interface Props {
-  isSettingsOpen: boolean;
-  setIsSettingsOpen: (isSettingsOpen: boolean) => void;
-}
+// Updating loggedin user information and deleteing loggedin user using modal, that overlays whole page
 
-const ProfileSettings: FC<Props> = ({ isSettingsOpen, setIsSettingsOpen }) => {
+const ProfileSettings: FC<ProfileSettingsProps> = ({
+  isSettingsOpen,
+  setIsSettingsOpen,
+}) => {
   const isLoggedIn = localStorage.getItem("accessToken");
-
   const [email, setEmail] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -33,56 +26,56 @@ const ProfileSettings: FC<Props> = ({ isSettingsOpen, setIsSettingsOpen }) => {
   const [newLastName, setNewLastName] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
-
   const [ErrorMessage, setErrorMessage] = useState("");
-  
-  const {updated, setUpdated} = useContext(UpdateContext);
+  const { updated, setUpdated } = useContext(UpdateContext);
 
   useEffect(() => {
-    getUser(JSON.parse(isLoggedIn!))
+    getSignedInUser(JSON.parse(isLoggedIn!))
       .then(({ email, name, surname, id }) => {
         setEmail(email);
         setFirstName(name);
         setLastName(surname);
       })
       .catch((e) => {
-        console.log("Error: Cant get user" + e);
+        console.log("Error: Cant get user. \n" + e);
       });
   });
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
-    // To prevent refreshing page  --> Fix so it works without page reload
-    e.preventDefault(); 
-    updateUser(
-      {
-        email: newEmail,
-        pass: newPassword,
-        passConfirm: newPasswordConfirm,
-        name: newFirstName,
-        surname: newLastName,
-      },
-      JSON.parse(isLoggedIn!)
-    )
-      .then(() => {
-        setUpdated(!updated)
-        setIsSettingsOpen(false);
-      })
-      .catch((err) => {
-        setErrorMessage(err.message);
-      });
+    e.preventDefault(); // To prevent refreshing the page on form submit
+    (async () => {
+      await updateUser(
+        {
+          email: newEmail,
+          pass: newPassword,
+          passConfirm: newPasswordConfirm,
+          name: newFirstName,
+          surname: newLastName,
+        },
+        JSON.parse(isLoggedIn!)
+      );
+      const result = await signIn({ email: newEmail, pass: newPassword });
+      localStorage.setItem(
+        "accessToken",
+        JSON.stringify(result["accessToken"])
+      );
+      setUpdated(!updated);
+      setIsSettingsOpen(false);
+    })().catch((err) => {
+      setErrorMessage(err.response.data.message);
+    });
   };
 
   const deleteProfile = async () => {
-    deleteUser(JSON.parse(isLoggedIn!))
-      .then(() => {
-        setIsSettingsOpen(false);
-        localStorage.clear();
-        window.location.href = "/";
-      })
-      .catch((err) => {
-        console.log(err);
-        setErrorMessage(err.message);
-      })
+    (async () => {
+      await deleteUser(JSON.parse(isLoggedIn!));
+      setIsSettingsOpen(false);
+      localStorage.clear();
+      window.location.href = "/";
+    })().catch((err) => {
+      console.log(err);
+      setErrorMessage(err.message);
+    });
   };
 
   return (

@@ -106,6 +106,8 @@ export const QuoteAuthor = styled.div`
   padding: 0px;
   gap: 10px;
 
+  cursor: pointer;
+
   @media (max-width: 900px) {
     max-width: 255px;
     min-height: 24px;

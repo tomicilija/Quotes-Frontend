@@ -13,11 +13,9 @@ import {
   BurgerMenu,
   AddMobile,
 } from "./Navbar.style";
-
 import { useLocation, Link } from "react-router-dom";
 import { ReactComponent as LogoIcon } from "../../assets/icons/navbar-logo.svg";
 import { ReactComponent as LogoIconWhite } from "../../assets/icons/navbar-logo-white.svg";
-
 import { ReactComponent as RightArrow } from "../../assets/arrows/RightArrow.svg";
 import { ReactComponent as RightArrowOrange } from "../../assets/arrows/RightArrow-orange.svg";
 import { ReactComponent as DefaultProfileIcon } from "../../assets/icons/profile.svg";
@@ -25,63 +23,66 @@ import { ReactComponent as DefaultProfileIcon1 } from "../../assets/icons/user-p
 import { ReactComponent as AddPicture } from "../../assets/icons/add.svg";
 import ProfileSettings from "../modals/profile-settings/ProfileSettings";
 import CreateQuote from "../modals/create-quote/CreateQuote";
-import { getUser } from "../../api/UserApi";
+import { getSignedInUser } from "../../api/UserApi";
+
+/*
+ * Navigation bar switches pages, opens modals, and is shown in few different views:
+ * Signup and Login pages
+ * Landing page with and without logged in user
+ * Profile page with white quotastic logo
+ * Mobile page with and without logged in user
+*/
 
 const Navbar = () => {
   const isLoggedIn = localStorage.getItem("accessToken");
   let location = useLocation();
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  // burger menu state
-  const [isBurgerOpen, setIsBurgerOpen] = useState<boolean>(false);
-  // add quote state
-  const [isQuoteOpen, setIsQuoteOpen] = useState<boolean>(false);
-  // settings state
-  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState<boolean>(false);
+  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState<boolean>(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
 
   const openQuoteModal = () => {
-    setIsQuoteOpen((prev) => !prev);
+    setIsQuoteModalOpen((prev) => !prev);
   };
   const openSettingsModal = () => {
-    setIsSettingsOpen((prev) => !prev);
+    setIsSettingsModalOpen((prev) => !prev);
   };
 
   useEffect(() => {
     if (isLoggedIn) {
-      getUser(JSON.parse(isLoggedIn!))
-        .then(({ name, surname, id }) => {
-          setFirstName(name);
-          setLastName(surname);
-        })
-        .catch((e) => {
-          console.log("Error: Cant get user" + e);
-        });
+      (async () => {
+        const response = await getSignedInUser(JSON.parse(isLoggedIn));
+        setFirstName(response.name);
+        setLastName(response.surname);
+      })().catch((e) => {
+        console.log("Error: Cant get user. \n" + e);
+      });
     }
-  });
+  }, [isLoggedIn]);
 
   return (
     <Container>
-      <BurgerMenu onClick={() => setIsBurgerOpen(!isBurgerOpen)}>
-        <span className={isBurgerOpen ? "xmark" : "burger"}></span>
-        <span className={isBurgerOpen ? "xmark" : "burger"}></span>
-        <span className={isBurgerOpen ? "xmark" : "burger"}></span>
+      <BurgerMenu onClick={() => setIsBurgerMenuOpen(!isBurgerMenuOpen)}>
+        <span className={isBurgerMenuOpen ? "xmark" : "burger"}></span>
+        <span className={isBurgerMenuOpen ? "xmark" : "burger"}></span>
+        <span className={isBurgerMenuOpen ? "xmark" : "burger"}></span>
       </BurgerMenu>
-      {location.pathname === "/profile" && isLoggedIn ? (
+      {location.pathname.includes("/profile") && isLoggedIn ? (
         <>
-          <Logo className={isBurgerOpen ? "black hideLogo" : "black showLogo"}>
+          <Logo className={isBurgerMenuOpen ? "black hideLogo" : "black showLogo"}>
             <Link to="/" style={{ textDecoration: "none" }}>
               <LogoIcon />
             </Link>
           </Logo>
-          <Logo className={isBurgerOpen ? "white hideLogo" : "white showLogo"}>
+          <Logo className={isBurgerMenuOpen ? "white hideLogo" : "white showLogo"}>
             <Link to="/" style={{ textDecoration: "none" }}>
               <LogoIconWhite />
             </Link>
           </Logo>
         </>
       ) : (
-        <Logo className={isBurgerOpen ? "hideLogo" : "showLogo"}>
+        <Logo className={isBurgerMenuOpen ? "hideLogo" : "showLogo"}>
           <Link to="/" style={{ textDecoration: "none" }}>
             <LogoIcon />
           </Link>
@@ -91,15 +92,15 @@ const Navbar = () => {
         <>
           <AddMobile
             onClick={openQuoteModal}
-            className={isBurgerOpen ? "hideButton" : "showButton"}
+            className={isBurgerMenuOpen ? "hideButton" : "showButton"}
           >
             <AddPicture />
           </AddMobile>
-          <Menu className={isBurgerOpen ? "showMenuNav" : "hideMenuNav"}>
+          <Menu className={isBurgerMenuOpen ? "showMenuNav" : "hideMenuNav"}>
             <ButtonWrapper>
               <Link
                 to="/profile"
-                onClick={() => setIsBurgerOpen(!isBurgerOpen)}
+                onClick={() => setIsBurgerMenuOpen(!isBurgerMenuOpen)}
                 style={{ textDecoration: "none" }}
               >
                 <MobileLink>
@@ -111,7 +112,7 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/"
-                onClick={() => setIsBurgerOpen(!isBurgerOpen)}
+                onClick={() => setIsBurgerMenuOpen(!isBurgerMenuOpen)}
                 style={{ textDecoration: "none" }}
               >
                 <MobileLink>
@@ -119,7 +120,7 @@ const Navbar = () => {
                   <RightArrow />
                 </MobileLink>
               </Link>
-              <div onClick={() => setIsBurgerOpen(!isBurgerOpen)}>
+              <div onClick={() => setIsBurgerMenuOpen(!isBurgerMenuOpen)}>
                 <MobileLink onClick={openSettingsModal}>
                   <p>Settings</p>
                   <RightArrow />
@@ -165,19 +166,19 @@ const Navbar = () => {
             </ButtonWrapper>
           </Menu>
           <ProfileSettings
-            isSettingsOpen={isSettingsOpen}
-            setIsSettingsOpen={setIsSettingsOpen}
+            isSettingsOpen={isSettingsModalOpen}
+            setIsSettingsOpen={setIsSettingsModalOpen}
           />
           <CreateQuote
-            isQuoteOpen={isQuoteOpen}
-            setIsQuoteOpen={setIsQuoteOpen}
+            isQuoteOpen={isQuoteModalOpen}
+            setIsQuoteOpen={setIsQuoteModalOpen}
           />
         </>
       ) : (
-        <Menu className={isBurgerOpen ? "showMenuNav" : "hideMenuNav"}>
+        <Menu className={isBurgerMenuOpen ? "showMenuNav" : "hideMenuNav"}>
           <ButtonWrapper>
             <Link to="/" style={{ textDecoration: "none" }}>
-              <Home onClick={() => setIsBurgerOpen(!isBurgerOpen)}>
+              <Home onClick={() => setIsBurgerMenuOpen(!isBurgerMenuOpen)}>
                 <p>Home</p>
                 <RightArrow />
               </Home>

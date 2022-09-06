@@ -1,117 +1,115 @@
 import axios from "axios";
+import { MyQuote, QuoteResponse } from "../interfaces/QuoteInterfaces";
 
-const api = axios.create({ baseURL: "http://localhost:5000/" });
+const axiosInstance = axios.create({ baseURL: "http://localhost:5000/" });
 
-interface Quote {
-  quote: string;
-}
+// API calls related to Quotes and Votes
 
-interface MyQuoteRes {
-  userid: string;
-  text: string;
-  karma: number;
-  creation_date: string;
-}
+export const getMyQuote = async (token: string): Promise<MyQuote> => {
+  const response = await axiosInstance.get("/myquote", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
 
-interface UserRes {
-  id: number;
-  firstName: string;
-  lastName: string;
-}
+export const getUserQuote = async (id: string): Promise<MyQuote> => {
+  const response = await axiosInstance.get(`/quote/${id}`, {});
+  return response.data;
+};
 
-export interface QuoteRes {
-  userid: string;
-  karma: number;
-  text: string;
-  name: string;
-  surname: string;
-}
+export const postMyQuote = async (
+  text: string,
+  token: string
+): Promise<void> => {
+  const response = await axiosInstance.post(
+    "/myquote",
+    { text: text },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
 
-interface VoteCheckRes {
-  userid: number;
-  vote: number;
-}
+export const updateMyQuote = async (
+  text: string,
+  token: string
+): Promise<void> => {
+  const response = await axiosInstance.patch(
+    "/myquote",
+    { text: text },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
 
-export const getMyQuote = (token: string): Promise<MyQuoteRes> =>
-  api
-    .get("/myquote", { headers: { Authorization: `Bearer ${token}` } })
-    .then((res) => res.data);
+export const deleteMyQuote = async (token: string): Promise<void> => {
+  const response = await axiosInstance.delete("/myquote", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
 
-export const getUsersQuote = (id: string): Promise<MyQuoteRes> =>
-  api.get(`/quote/${id}`, {}).then((res) => res.data);
+export const voteCheck = async (id: string, token: string): Promise<string> => {
+  const response = await axiosInstance.get(`/user/${id}/vote`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
 
-export const postMyQuote = (text: string, token: string): Promise<void> =>
-  api
-    .post(
-      "/myquote",
-      { text: text },
-      { headers: { Authorization: `Bearer ${token}` } }
-    )
-    .then((res) => res.data);
-
-export const updateMyQuote = (text: string, token: string): Promise<void> =>
-  api
-    .patch(
-      "/myquote",
-      { text: text },
-      { headers: { Authorization: `Bearer ${token}` } }
-    )
-    .then((res) => res.data);
-
-export const deleteMyQuote = (token: string): Promise<void> =>
-  api
-    .delete("/myquote", { headers: { Authorization: `Bearer ${token}` } })
-    .then((res) => res.data);
-
-export const voteCheck = (id: string, token: string): Promise<string> =>
-  api
-    .get(`/user/${id}/vote`, {
+export const upvoteQuote = async (id: string, token: string): Promise<void> => {
+  const response = await axiosInstance.post(
+    `/user/${id}/upvote`,
+    {},
+    {
       headers: { Authorization: `Bearer ${token}` },
-    })
-    .then((res) => res.data);
+    }
+  );
+  return response.data;
+};
 
-export const upvoteUser = (id: string, token: string): Promise<void> =>
-  api
-    .post(
-      `/user/${id}/upvote`,
-      {},
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    )
-    .then((res) => res.data);
-
-export const downvoteUser = (id: string, token: string): Promise<void> =>
-  api
-    .post(
-      `/user/${id}/downvote`,
-      {},
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    )
-    .then((res) => res.data);
-
-export const deleteUpvote = (id: string, token: string): Promise<void> =>
-  api
-    .delete(`/user/${id}/upvote`, {
+export const downvoteQuote = async (
+  id: string,
+  token: string
+): Promise<void> => {
+  const response = await axiosInstance.post(
+    `/user/${id}/downvote`,
+    {},
+    {
       headers: { Authorization: `Bearer ${token}` },
-    })
-    .then((res) => res.data);
+    }
+  );
+  return response.data;
+};
 
-export const deleteDownvote = (id: string, token: string): Promise<void> =>
-  api
-    .delete(`/user/${id}/downvote`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    .then((res) => res.data);
+export const deleteUpvote = async (
+  id: string,
+  token: string
+): Promise<void> => {
+  const response = await axiosInstance.delete(`/user/${id}/upvote`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
 
-export const getList = (): Promise<QuoteRes[]> =>
-  api.get(`/likes`, {}).then((res) => res.data);
+export const deleteDownvote = async (
+  id: string,
+  token: string
+): Promise<void> => {
+  const response = await axiosInstance.delete(`/user/${id}/downvote`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
 
-export const getRecent = (token: string): Promise<QuoteRes[]> =>
-  api
-    .get(`/recent`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    .then((res) => res.data);
+export const getMostUpvoatedQuotes = async (): Promise<QuoteResponse[]> => {
+  const response = await axiosInstance.get(`/likes`, {});
+  return response.data;
+};
+
+export const getMostRecentQuotes = async (
+  token: string
+): Promise<QuoteResponse[]> => {
+  const response = await axiosInstance.get(`/recent`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};

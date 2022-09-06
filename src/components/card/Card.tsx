@@ -9,195 +9,121 @@ import {
   AuthorName,
   AuthorPicture,
 } from "./Card.style";
-
-/* Background Image */
+import {
+  deleteDownvote,
+  deleteUpvote,
+  downvoteQuote,
+  getUserQuote,
+  upvoteQuote,
+  voteCheck,
+} from "../../api/QuoteApi";
 import { ReactComponent as UpvoteBlack } from "../../assets/arrows/UpVoteBlack.svg";
 import { ReactComponent as DownVoteBlack } from "../../assets/arrows/DownVoteBlack.svg";
 import { ReactComponent as UpvoteOrange } from "../../assets/arrows/UpVoteOrange.svg";
 import { ReactComponent as DownVoteOrange } from "../../assets/arrows/DownVoteOrange.svg";
+import { useContext, useEffect, useState } from "react";
+import { UpdateContext } from "../../utils/UpdateContext";
+import { CardProps } from "../../interfaces/QuoteInterfaces";
+import { useNavigate } from "react-router-dom";
 
-/* Profile Image Todo */
-import { ReactComponent as ProfilePicture } from "./Location/image.svg";
-import {
-  deleteDownvote,
-  deleteUpvote,
-  downvoteUser,
-  getMyQuote,
-  getUsersQuote,
-  upvoteUser,
-  voteCheck,
-} from "../../api/QuoteApi";
-import { useEffect, useState } from "react";
+// Recives user and quote data, displays it, and handles quote voting
 
-interface VoteCardProps {
-  userid: string;
-  karma: number;
-  quote: string;
-  firstName: string;
-  lastName: string;
-}
-
-const Card: React.FC<VoteCardProps> = ({
+const Card: React.FC<CardProps> = ({
   userid,
   karma,
   quote,
   firstName,
   lastName,
 }) => {
+  const navigate = useNavigate();
   const isLoggedIn = localStorage.getItem("accessToken");
-  const [quoteStatus, setQuoteStatus] = useState("");
+  const [quoteVoteStatus, setQuoteVoteStatus] = useState("");
   const [userKarma, setUserKarma] = useState(0);
+  const { updated, setUpdated } = useContext(UpdateContext);
 
   useEffect(() => {
     setUserKarma(karma);
-  }, [karma]);
+  }, [updated, karma]);
 
   useEffect(() => {
-    voteCheck(userid, JSON.parse(isLoggedIn!))
-      .then((text) => setQuoteStatus(text))
-      .catch((e) => {
-        console.log("Error: Cant get state" + e);
-      });
-  });
+    (async () => {
+      const response = await voteCheck(userid, JSON.parse(isLoggedIn!));
+      setQuoteVoteStatus(response);
+    })().catch((e) => {
+      console.log("Error: Cant get state. \n" + e);
+    });
+  }, [updated, userid, isLoggedIn]);
+
+  const updateQuote = async () => {
+    const quote = await getUserQuote(userid);
+    setUpdated(!updated);
+    setUserKarma(quote.karma);
+  };
+
+  const upvote = async () => {
+    await upvoteQuote(userid, JSON.parse(isLoggedIn!));
+  };
+
+  const downvote = async () => {
+    await downvoteQuote(userid, JSON.parse(isLoggedIn!));
+  };
+
+  const deleteupvote = async () => {
+    await deleteUpvote(userid, JSON.parse(isLoggedIn!));
+  };
+
+  const deletedownvote = async () => {
+    await deleteDownvote(userid, JSON.parse(isLoggedIn!));
+  };
 
   const handleUpvote = async () => {
-    if (quoteStatus === "NEUTRAL") {
-      upvoteUser(userid, JSON.parse(isLoggedIn!))
-        .then(() => {
-          getUsersQuote(userid)
-            .then((quote) => {
-              setUserKarma(quote.karma);
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    } else if (quoteStatus === "DOWNVOTE") {
-      deleteDownvote(userid, JSON.parse(isLoggedIn!))
-        .then(() => {
-          upvoteUser(userid, JSON.parse(isLoggedIn!))
-            .then(() => {
-              getUsersQuote(userid)
-                .then((quote) => {
-                  setUserKarma(quote.karma);
-                })
-                .catch((e) => {
-                  console.log(e);
-                });
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-        })
-        .then(() => {
-          getUsersQuote(userid)
-            .then((quote) => {
-              setUserKarma(quote.karma);
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    } else if (quoteStatus === "UPVOTE") {
-      deleteUpvote(userid, JSON.parse(isLoggedIn!))
-        .then(() => {
-          getUsersQuote(userid)
-            .then((quote) => {
-              setUserKarma(quote.karma);
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+    if (quoteVoteStatus === "NEUTRAL") {
+      await upvote();
+    } else if (quoteVoteStatus === "DOWNVOTE") {
+      await deletedownvote();
+      await upvote();
+    } else if (quoteVoteStatus === "UPVOTE") {
+      await deleteupvote();
     }
+    await updateQuote();
   };
 
   const handleDownvote = async () => {
-    if (quoteStatus === "NEUTRAL") {
-      downvoteUser(userid, JSON.parse(isLoggedIn!))
-        .then(() => {
-          getUsersQuote(userid)
-            .then((quote) => {
-              setUserKarma(quote.karma);
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    } else if (quoteStatus === "UPVOTE") {
-      deleteUpvote(userid, JSON.parse(isLoggedIn!))
-        .then(() => {
-          downvoteUser(userid, JSON.parse(isLoggedIn!))
-            .then(() => {
-              getUsersQuote(userid)
-                .then((quote) => {
-                  setUserKarma(quote.karma);
-                })
-                .catch((e) => {
-                  console.log(e);
-                });
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-        })
-        .then(() => {
-          getUsersQuote(userid)
-            .then((quote) => {
-              setUserKarma(quote.karma);
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    } else if (quoteStatus === "DOWNVOTE") {
-      deleteDownvote(userid, JSON.parse(isLoggedIn!))
-        .then(() => {
-          getUsersQuote(userid)
-            .then((quote) => {
-              setUserKarma(quote.karma);
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+    if (quoteVoteStatus === "NEUTRAL") {
+      await downvote();
+    } else if (quoteVoteStatus === "UPVOTE") {
+      await deleteupvote();
+      await downvote();
+    } else if (quoteVoteStatus === "DOWNVOTE") {
+      await deletedownvote();
     }
+    await updateQuote();
+  };
+
+  const UserProfile = async () => {
+    return navigate(`/profile/${userid}`);
   };
 
   return (
     <Container>
       <Votes>
         <Arrow onClick={() => handleUpvote()}>
-          {quoteStatus === "UPVOTE" ? <UpvoteOrange /> : <UpvoteBlack />}
+          {quoteVoteStatus === "UPVOTE" ? <UpvoteOrange /> : <UpvoteBlack />}
         </Arrow>
         <VotesValue>{userKarma}</VotesValue>
         <Arrow onClick={() => handleDownvote()}>
-          {quoteStatus === "DOWNVOTE" ? <DownVoteOrange /> : <DownVoteBlack />}
+          {quoteVoteStatus === "DOWNVOTE" ? (
+            <DownVoteOrange />
+          ) : (
+            <DownVoteBlack />
+          )}
         </Arrow>
       </Votes>
       <Quote>
         <QuoteText>
           <p>{quote}</p>
         </QuoteText>
-        <QuoteAuthor>
+        <QuoteAuthor onClick={UserProfile}>
           <AuthorPicture>
             {/*<ProfilePicture />*/}
             <img src="https://picsum.photos/50/50" alt="avatar" />

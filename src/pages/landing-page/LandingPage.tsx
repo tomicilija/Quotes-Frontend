@@ -19,68 +19,55 @@ import {
   Button,
   SeeMore,
 } from "./LandingPage.style";
-import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
-
 import Card from "../../components/card/Card";
-import { getUser, getUserVotes } from "../../api/UserApi";
-import { getList, getMyQuote, getRecent } from "../../api/QuoteApi";
 import CardGrid from "../../components/card-grid/CardGrid";
-
-/* Background Images */
+import { Link } from "react-router-dom";
+import { getMostUpvoatedQuotes, getMostRecentQuotes } from "../../api/QuoteApi";
 import { ReactComponent as BackgroundTop } from "../../assets/background/vectorTop.svg";
 import { ReactComponent as BackgroundMid } from "../../assets/background/vectorMid.svg";
 import { ReactComponent as BackgroundLow } from "../../assets/background/vectorLow.svg";
 import { UpdateContext } from "../../utils/UpdateContext";
+import { QuoteResponse } from "../../interfaces/QuoteInterfaces";
 
-export interface QuoteRes {
-  userid: string;
-  karma: number;
-  text: string;
-  name: string;
-  surname: string;
-}
+// One version of landing page can be shown to anyone, logged in user sees different version, same for mobile users
+
+const quote = {
+  userid: "",
+  karma: 0,
+  text: "",
+  name: "",
+  surname: "",
+};
 
 const LandingPage = () => {
   const isLoggedIn = localStorage.getItem("accessToken");
-
-  const [userid, setUserId] = useState("");
-
-  const [mostLikedQuotes, setMostLikedQuotes] = useState<QuoteRes[]>([]);
-  const [recentQuotes, setRecentQuotes] = useState<QuoteRes[]>([]);
+  const [mostLikedQuotes, setMostLikedQuotes] = useState<QuoteResponse[]>([]);
+  const [recentQuotes, setRecentQuotes] = useState<QuoteResponse[]>([]);
+  const [randomQuote, setRandomQuote] = useState<QuoteResponse>(quote);
+  const [heroQuote1, setHeroQuote1] = useState<QuoteResponse>(quote);
+  const [heroQuote2, setHeroQuote2] = useState<QuoteResponse>(quote);
+  const [heroQuote3, setHeroQuote3] = useState<QuoteResponse>(quote);
   const [showedLikedQuotesDesktop, setShowedLikedQuotesDesktop] = useState(9);
   const [showedRecentQuotesDesktop, setShowedRecentQuotesDesktop] = useState(9);
   const [showedLikedQuotesMobile, setShowedLikedQuotesMobile] = useState(4);
   const [showedRecentQuotesMobile, setShowedRecentQuotesMobile] = useState(4);
-  const [randomQuote, setRandomQuote] = useState<QuoteRes>({
-    userid: "",
-    karma: 0,
-    text: "",
-    name: "",
-    surname: "",
-  });
-  const [heroQuote1, setHeroQuote1] = useState<QuoteRes>({
-    userid: "",
-    karma: 0,
-    text: "",
-    name: "",
-    surname: "",
-  });
-  const [heroQuote2, setHeroQuote2] = useState<QuoteRes>({
-    userid: "",
-    karma: 0,
-    text: "",
-    name: "",
-    surname: "",
-  });
-  const [heroQuote3, setHeroQuote3] = useState<QuoteRes>({
-    userid: "",
-    karma: 0,
-    text: "",
-    name: "",
-    surname: "",
-  });
-
+  const [isThreeCollumnSizeGrid, setIsThreeCollumnSizeGrid] = useState(window.innerWidth > 1340);
   const { updated } = useContext(UpdateContext);
+
+  /*
+   * Quote cards can be shown in grid of 3, 2, or 1 columns, depending on screen width
+   * 3 column grid shows max of 9 cards and lods by 9 cards
+   * 2 and 1 column shows max of 4 cards, and loads by 4 cards
+   */
+
+  const updateScreenSize = () => {
+    setIsThreeCollumnSizeGrid(window.innerWidth > 1340);
+  };
+  
+  useEffect(() => {
+    window.addEventListener("resize", updateScreenSize);
+    return () => window.removeEventListener("resize", updateScreenSize);
+  });
 
   const loadLikedQuotesDesktop = () => {
     setShowedLikedQuotesDesktop((prevValue) => prevValue + 9);
@@ -99,30 +86,27 @@ const LandingPage = () => {
   };
 
   useEffect(() => {
-    getList().then((quotes) => {
-      setMostLikedQuotes(quotes);
+    (async () => {
+      const quotes = await getMostUpvoatedQuotes();
       setHeroQuote1(quotes[0]);
       setHeroQuote2(quotes[1]);
       setHeroQuote3(quotes[2]);
       setRandomQuote(quotes[Math.floor(Math.random() * quotes.length)]);
-    });
+    })();
+  }, []);
 
-    if (isLoggedIn) {
-      getRecent(JSON.parse(isLoggedIn!)).then((quotes) => {
-        setRecentQuotes(quotes);
-      });
-    }
-  }, [updated]);
-
-  // Show only 4 cards on mobile & 9 on desktop
-  const [isDesktop, setDesktop] = useState(window.innerWidth > 1340);
-  const updateMedia = () => {
-    setDesktop(window.innerWidth > 1340);
-  };
   useEffect(() => {
-    window.addEventListener("resize", updateMedia);
-    return () => window.removeEventListener("resize", updateMedia);
-  });
+    (async () => {
+      const quotes = await getMostUpvoatedQuotes();
+      setMostLikedQuotes(quotes);
+    })();
+    if (isLoggedIn) {
+      (async () => {
+        const quotes = await getMostRecentQuotes(JSON.parse(isLoggedIn));
+        setRecentQuotes(quotes);
+      })();
+    }
+  }, [updated, isLoggedIn]);
 
   return (
     <Container>
@@ -156,7 +140,7 @@ const LandingPage = () => {
                 like to keep them saved in your profile.
               </p>
             </Tittle>
-            {isDesktop ? (
+            {isThreeCollumnSizeGrid ? (
               <>
                 <CardGrid
                   quotes={mostLikedQuotes.slice(0, showedLikedQuotesDesktop)}
@@ -180,7 +164,7 @@ const LandingPage = () => {
                 them that you seen the new quote and like the ones you like.
               </p>
             </Tittle>
-            {isDesktop ? (
+            {isThreeCollumnSizeGrid ? (
               <>
                 <CardGrid
                   quotes={recentQuotes.slice(0, showedRecentQuotesDesktop)}
@@ -257,7 +241,7 @@ const LandingPage = () => {
                 like to keep them saved in your profile.
               </p>
             </Tittle>
-            {isDesktop ? (
+            {isThreeCollumnSizeGrid ? (
               <CardGrid quotes={mostLikedQuotes.slice(0, 9)} />
             ) : (
               <CardGrid quotes={mostLikedQuotes.slice(0, 4)} />

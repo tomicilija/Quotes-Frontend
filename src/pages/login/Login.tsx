@@ -6,41 +6,29 @@ import {
   LoginForm,
   LoginFormSection,
 } from "./Login.style";
-import { useState, useEffect } from "react";
-
-import {
-  BrowserRouter,
-  Link,
-  Navigate,
-  Route,
-  Routes,
-  useNavigate,
-} from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ReactComponent as Backgroundimg } from "../../assets/background/vectorQuotations.svg";
 import { signIn } from "../../api/UserApi";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const navigate = useNavigate();
-
   const [ErrorMessage, setErrorMessage] = useState("");
 
-  //// USE code form API file
   const handleSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    signIn( { email: email, pass: password})
-      .then((result) => {
-        localStorage.setItem(
-          "accessToken",
-          JSON.stringify(result["accessToken"])
-        );
-        return navigate("/profile");
-      })
-      .catch((err) => {
-        setErrorMessage(err.response.data.message);
-      });
+    e.preventDefault(); // To prevent refreshing the page on form submit
+    (async () => {
+      const result = await signIn({ email: email, pass: password });
+      localStorage.setItem(
+        "accessToken",
+        JSON.stringify(result["accessToken"])
+      );
+      return navigate("/profile");
+    })().catch((err) => {
+      setErrorMessage(err.response.data.message);
+    });
   };
 
   return (

@@ -1,7 +1,6 @@
 /* importing global styles */
 import "./App.css";
-
-import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React from "react";
 import Login from "./pages/login/Login";
 import SignUp from "./pages/sign-up/SignUp";
@@ -18,10 +17,12 @@ class App extends React.Component {
         <BrowserRouter>
           <Navbar />
           <Routes>
+            <Route path="*" element={<LandingPage />} />
             <Route path="/" element={<LandingPage />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:id" element={<Profile />} />
           </Routes>
           <Footer />
         </BrowserRouter>
